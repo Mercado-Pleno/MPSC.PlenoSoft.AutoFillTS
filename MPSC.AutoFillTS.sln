@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2037
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPSC.AutoFillTS", "AutoFillTS\MPSC.AutoFillTS.csproj", "{2E48EFAC-9ACF-4A40-B20B-1C67B075636C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{48ACFF75-ABD1-474B-9DB0-B81E45AD68D5}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPSC.TestesUnitarios", "TestesUnitarios\MPSC.TestesUnitarios.csproj", "{468C27FD-99BC-4C32-BEA1-2BBAC49638AB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2E48EFAC-9ACF-4A40-B20B-1C67B075636C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E48EFAC-9ACF-4A40-B20B-1C67B075636C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E48EFAC-9ACF-4A40-B20B-1C67B075636C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E48EFAC-9ACF-4A40-B20B-1C67B075636C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{468C27FD-99BC-4C32-BEA1-2BBAC49638AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{468C27FD-99BC-4C32-BEA1-2BBAC49638AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{468C27FD-99BC-4C32-BEA1-2BBAC49638AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{468C27FD-99BC-4C32-BEA1-2BBAC49638AB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {86300BE8-B40A-4334-8F9D-5BE5CF78C507}
+	EndGlobalSection
+EndGlobal
