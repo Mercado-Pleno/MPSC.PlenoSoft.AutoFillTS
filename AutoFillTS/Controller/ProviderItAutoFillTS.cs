@@ -10,8 +10,17 @@ namespace MPSC.AutoFillTS.Controller
 {
 	public class ProviderItAutoFillTS : AbstractAutoFillTS
 	{
-		protected override String UrlLogin { get { return "http://186.215.208.202/intranet/login/login.asp"; } }
-		protected override IEnumerable<String> Urls { get { yield return String.Format("http://186.215.208.202/intranet/bcp/apropriacao_de_horas/timesheet/?th=HN&dt={0}&am={0}", DateTime.Today.ToString("yyyyMM")); } }
+		protected override String UrlLogin { get { return "http://186.215.208.203/intranet/login/login.asp"; } }
+		protected override IEnumerable<String> Urls
+		{
+			get
+			{
+				yield return "http://186.215.208.203/intranet/menu/redirecionadorPortal.asp?cdLinkSistema=BCP2";
+				yield return "http://186.215.208.203/intranet/bcp/";
+				yield return "http://186.215.208.203/intranet/bcp/index_menu/#";
+				yield return "http://186.215.208.203/intranet/bcp/apropriacao_de_horas/timesheet/";
+			}
+		}
 
 		private TextField[] cache1;
 		private SelectList[] cache2;
@@ -25,7 +34,7 @@ namespace MPSC.AutoFillTS.Controller
 			if (document.ContainsAnyText("INGRESSAR", "Recuperar senha"))
 			{
 				var userOk = !String.IsNullOrWhiteSpace(document.TextField(e => e.FindByIdOrName("USUARIO")).Text);
-				var passOk = !String.IsNullOrWhiteSpace(document.TextField(e => e.FindByIdOrName("USUARIO")).Text);
+				var passOk = !String.IsNullOrWhiteSpace(document.TextField(e => e.FindByIdOrName("SENHA")).Text);
 				if (userOk || passOk)
 					document.Button(e => e.FindByIdOrName("COMANDO")).Click();
 			}
@@ -52,6 +61,9 @@ namespace MPSC.AutoFillTS.Controller
 
 		private void GuardarEmCache(Document document)
 		{
+			while (!document.ContainsAllText("REGISTRO DE HORAS", "COMPETÊNCIA", "HORAS NORMAIS", "HORAS EXTRAS", "SOBREAVISO"))
+				WatiNExtension.Wait();
+
 			cache1 = document.TextFields.Where(tf => tf.Exists).ToArray();
 			cache2 = document.SelectLists.Where(tf => tf.Exists).ToArray();
 		}
