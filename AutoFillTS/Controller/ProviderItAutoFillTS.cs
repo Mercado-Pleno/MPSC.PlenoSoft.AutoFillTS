@@ -45,18 +45,25 @@ namespace MPSC.AutoFillTS.Controller
 
 		private static void SelecionarCompetencia(Document document, TimeSheet timeSheet)
 		{
+			var comboCompetencia = document.SelectList(e => e.FindByIdOrName("ANOMES_TELA"));
 			var data = timeSheet.TarefasDiarias.Min(t => t.Data);
 			var competencia = data.Year * 100 + data.Month;
-			document.SelectList(e => e.FindByIdOrName("ANOMES_TELA")).Select(competencia, true);
+			if (comboCompetencia.GetAttributeValue("value") != competencia.ToString())
+				comboCompetencia.Select(competencia, true);
 		}
 
 		private static void SelecionarTipoHora(Document document, string tipo)
 		{
 			var form = document.Form(e => e.FindByIdOrName("frmCadDoc"));
+			var txt = form.TextField(e => e.FindByIdOrName("TIPO_HORA"));
+			var tipohora = $"tipoHora('{txt.Value}')";
+
 			var cell = GetCell(form, tipo);
 			while (GetCell(cell, tipo) != null)
 				cell = GetCell(cell, tipo);
-			cell.Click();
+
+			if (!cell.OuterHtml.Contains(tipohora))
+				cell.Click();
 		}
 
 		private void GuardarEmCache(Document document)
@@ -78,6 +85,8 @@ namespace MPSC.AutoFillTS.Controller
 
 		protected override bool Fill(Document document, TimeSheet timeSheet)
 		{
+			SelecionarCompetencia(document, timeSheet);
+			SelecionarTipoHora(document, "HORAS NORMAIS");
 			GuardarEmCache(document);
 			foreach (var item in timeSheet.TarefasDiarias)
 				PreencherHorasNormais(document, item);
@@ -99,7 +108,7 @@ namespace MPSC.AutoFillTS.Controller
 			cache2.FirstOrDefault(e => e.FindByIdOrName("ID_PROJETO" + sufixo)).Select(51432, false);
 			cache1.FirstOrDefault(e => e.FindByIdOrName("hora_ini" + sufixo)).Select(tarefaDiaria.Inicio.ToHora(), false);
 			cache1.FirstOrDefault(e => e.FindByIdOrName("hora_fim" + sufixo)).Select(tarefaDiaria.TerminoHorasComuns.ToHora(), false);
-			cache1.FirstOrDefault(e => e.FindByIdOrName("intervalo" + sufixo)).Select(tarefaDiaria.Intervalo.ToHora(), false).Focus();
+			cache1.FirstOrDefault(e => e.FindByIdOrName("intervalo" + sufixo)).Select(tarefaDiaria.Intervalo.ToHora(), false)?.Focus();
 			cache1.FirstOrDefault(e => e.FindByIdOrName("DESCRICAO" + sufixo)).Select(tarefaDiaria.Descricao, false);
 
 			return true;
