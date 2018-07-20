@@ -112,7 +112,7 @@ namespace MPSC.AutoFillTS.Infra
 
 		public static Boolean IsDigits(this String str)
 		{
-			return !String.IsNullOrWhiteSpace(str) && str.All(chr => Char.IsDigit(chr));
+			return !String.IsNullOrWhiteSpace(str) && str.All(Char.IsDigit);
 		}
 
 		public static Int32 ConverterEmNumero(this String mes)

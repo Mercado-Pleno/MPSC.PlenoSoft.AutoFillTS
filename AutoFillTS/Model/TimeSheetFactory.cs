@@ -1,6 +1,7 @@
 ﻿using MPSC.AutoFillTS.Infra;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace MPSC.AutoFillTS.Model
 {
@@ -13,26 +14,12 @@ namespace MPSC.AutoFillTS.Model
 			Data_IniFim_Soma_Descricao = 5,
 			Data_IniFim_IniFim_Descricao = 6,
 			Data_IniFim_Descricao_Projeto_Sistema_Categoria_Atividade = 8,
-            Data_IniFim_IniFim_Descricao_Projeto_Sistema_Categoria_Atividade = 10,
-            Data_IniFim_IniFim_IniFim_Descricao_Projeto_Sistema_Categoria_Atividade = 12,
-            Data_IniFim_IniFim_IniFim_Tipo_Controle_Descricao_Projeto_Sistema_Categoria_Atividade = 14,
-            Data_IniFim_IniFim_Tipo_Controle_Soma_Descricao_Projeto_Sistema_Categoria_Atividade = 13,
+			Data_IniFim_IniFim_Descricao_Projeto_Sistema_Categoria_Atividade = 10,
+			Data_IniFim_IniFim_IniFim_Descricao_Projeto_Sistema_Categoria_Atividade = 12,
+			Data_IniFim_IniFim_IniFim_Tipo_Controle_Descricao_Projeto_Sistema_Categoria_Atividade = 14,
+			Data_IniFim_Tipo_Controle_Soma_Descricao_Projeto_Sistema_Categoria_Atividade = 11,
+			Data_IniFim_IniFim_Tipo_Controle_Soma_Descricao_Projeto_Sistema_Categoria_Atividade = 13,
 			CGS = 1001,
-		}
-
-		public static TimeSheet LoadFile(String fullfileName)
-		{
-			TimeSheet timeSheet = null;
-
-			if (fullfileName.EndsWith(".txt") && File.Exists(fullfileName))
-			{
-				StreamReader streamReader = new StreamReader(fullfileName, System.Text.Encoding.UTF7);
-				String arquivo = streamReader.ReadToEnd();
-				streamReader.Close();
-				streamReader.Dispose();
-				timeSheet = Load(arquivo);
-			}
-			return timeSheet;
 		}
 
 		public static TimeSheet Load(String arquivo)
@@ -42,7 +29,7 @@ namespace MPSC.AutoFillTS.Model
 
 		public static TimeSheet Load(String[] linhas)
 		{
-			TimeSheet timeSheet = null;
+			var timeSheet = new TimeSheet();
 			var timeSheetFormat = IdentificarFormato(linhas);
 			switch (timeSheetFormat)
 			{
@@ -59,8 +46,9 @@ namespace MPSC.AutoFillTS.Model
 				case TimeSheetFormat.Data_IniFim_IniFim_IniFim_Tipo_Controle_Descricao_Projeto_Sistema_Categoria_Atividade:
 					timeSheet = LoadTxtFormato08(linhas);
 					break;
+				case TimeSheetFormat.Data_IniFim_Tipo_Controle_Soma_Descricao_Projeto_Sistema_Categoria_Atividade:
 				case TimeSheetFormat.Data_IniFim_IniFim_Tipo_Controle_Soma_Descricao_Projeto_Sistema_Categoria_Atividade:
-					timeSheet = LoadTxtFormato13(linhas);
+					timeSheet = LoadTxtFormato11(linhas);
 					break;
 				case TimeSheetFormat.CGS:
 					timeSheet = LoadTxtFormatoCGS(linhas);
@@ -73,32 +61,32 @@ namespace MPSC.AutoFillTS.Model
 
 		private static TimeSheet LoadTxtFormato04_05_06(String[] linhas)
 		{
-			TimeSheet timeSheet = new TimeSheet();
-			String projeto = "261";
-			String sistema = "77";
-			String categoria = "Desenvolvimento";
-			String tipoAtividade = "Desenvolvimento - Projeto";
-			String tipoControle = "Sem definição";
-			String valorControle = String.Empty;
+			var timeSheet = new TimeSheet();
+			var projeto = "261";
+			var sistema = "77";
+			var categoria = "Desenvolvimento";
+			var tipoAtividade = "Desenvolvimento - Projeto";
+			var tipoControle = "Sem definição";
+			var valorControle = String.Empty;
 
-			foreach (String linha in linhas)
+			foreach (var linha in linhas)
 			{
 				if (!String.IsNullOrWhiteSpace(linha))
 				{
 					var campos = linha.Split('\t');
 					if (campos.Length >= 4)
 					{
-						DateTime data = campos[0].ConverterEmData();
-						String descricao = campos[campos.Length - 1];
+						var data = campos[0].ConverterEmData();
+						var descricao = campos[campos.Length - 1];
 						if (!String.IsNullOrWhiteSpace(descricao))
 						{
 							for (int i = 1; i < campos.Length - 2; i += 2)
 							{
-								String inicio = campos[i];
-								String termino = campos[i + 1];
+								var inicio = campos[i];
+								var termino = campos[i + 1];
 								if ((termino.EmMinutos() - inicio.EmMinutos()) > 0)
 								{
-									Tarefa tarefa = timeSheet.Adicionar(projeto, sistema, categoria, tipoAtividade, data, inicio.PadLeft(5, '0'), termino.PadLeft(5, '0'), descricao, tipoControle, valorControle);
+									var tarefa = timeSheet.Adicionar(projeto, sistema, categoria, tipoAtividade, data, inicio.PadLeft(5, '0'), termino.PadLeft(5, '0'), descricao, tipoControle, valorControle);
 									Log(tarefa);
 								}
 							}
@@ -120,35 +108,35 @@ namespace MPSC.AutoFillTS.Model
 				if (!String.IsNullOrWhiteSpace(linha))
 				{
 					var campos = linha.Split('\t');
-                    var offSet = campos.Length - 8;
-                    var horarios = (campos.Length / 2) - 3;
-                    if (campos.Length == (int)TimeSheetFormat.Data_IniFim_IniFim_IniFim_Tipo_Controle_Descricao_Projeto_Sistema_Categoria_Atividade)
-                    {
-                        tipoControle = String.IsNullOrWhiteSpace(campos[7]) || String.IsNullOrWhiteSpace(campos[8]) ? "Sem definição" : campos[7];
-                        valorControle = campos[8];
-                        horarios = 3;
-                    }
+					var offSet = campos.Length - 8;
+					var horarios = (campos.Length / 2) - 3;
+					if (campos.Length == (int)TimeSheetFormat.Data_IniFim_IniFim_IniFim_Tipo_Controle_Descricao_Projeto_Sistema_Categoria_Atividade)
+					{
+						tipoControle = String.IsNullOrWhiteSpace(campos[7]) || String.IsNullOrWhiteSpace(campos[8]) ? "Sem definição" : campos[7];
+						valorControle = campos[8];
+						horarios = 3;
+					}
 
 					if (campos.Length >= (int)TimeSheetFormat.Data_IniFim_Descricao_Projeto_Sistema_Categoria_Atividade)
 					{
 						var data = campos[0].ConverterEmData();
-                        var descricao = campos[offSet + 3];
-                        var projeto = campos[offSet + 4];
-                        var sistema = campos[offSet + 5];
-                        var categoria = campos[offSet + 6];
-                        var tipoAtividade = campos[offSet + 7];
+						var descricao = campos[offSet + 3];
+						var projeto = campos[offSet + 4];
+						var sistema = campos[offSet + 5];
+						var categoria = campos[offSet + 6];
+						var tipoAtividade = campos[offSet + 7];
 						if (!String.IsNullOrWhiteSpace(descricao))
 						{
-                            for (var i = 0; i < horarios; i++)
-                            {
-                                var inicio = campos[i * 2 + 1];
-                                var termino = campos[i * 2 + 2];
-                                if ((termino.EmMinutos() - inicio.EmMinutos()) > 0)
-                                {
-                                    var tarefa = timeSheet.Adicionar(projeto, sistema, categoria, tipoAtividade, data, inicio.PadLeft(5, '0'), termino.PadLeft(5, '0'), descricao, tipoControle, valorControle);
-                                    Log(tarefa);
-                                }
-                            }
+							for (var i = 0; i < horarios; i++)
+							{
+								var inicio = campos[i * 2 + 1];
+								var termino = campos[i * 2 + 2];
+								if ((termino.EmMinutos() - inicio.EmMinutos()) > 0)
+								{
+									var tarefa = timeSheet.Adicionar(projeto, sistema, categoria, tipoAtividade, data, inicio.PadLeft(5, '0'), termino.PadLeft(5, '0'), descricao, tipoControle, valorControle);
+									Log(tarefa);
+								}
+							}
 						}
 					}
 				}
@@ -157,33 +145,36 @@ namespace MPSC.AutoFillTS.Model
 			return timeSheet;
 		}
 
-		private static TimeSheet LoadTxtFormato13(String[] linhas)
+		private static TimeSheet LoadTxtFormato11(String[] linhas)
 		{
-			TimeSheet timeSheet = new TimeSheet();
-			foreach (String linha in linhas)
+			var timeSheet = new TimeSheet();
+			foreach (var linha in linhas)
 			{
 				if (!String.IsNullOrWhiteSpace(linha))
 				{
 					var campos = linha.Split('\t');
-					if (campos.Length == (int)TimeSheetFormat.Data_IniFim_IniFim_Tipo_Controle_Soma_Descricao_Projeto_Sistema_Categoria_Atividade)
+					var offSet = campos.Length - 11;
+					var horarios = (campos.Length / 2) - 4;
+
+					if (campos.Length >= (int)TimeSheetFormat.Data_IniFim_Tipo_Controle_Soma_Descricao_Projeto_Sistema_Categoria_Atividade)
 					{
 						var data = campos[0].ConverterEmData();
-						var tipoControle = String.IsNullOrWhiteSpace(campos[5]) || String.IsNullOrWhiteSpace(campos[6]) ? "Sem definição" : campos[5];
-						var valorControle = campos[6];
-						var descricao = campos[8];
-						var projeto = campos[9];
-						var sistema = campos[10];
-						var categoria = campos[11];
-						var tipoAtividade = campos[12];
+						var tipoControle = String.IsNullOrWhiteSpace(campos[offSet + 3]) || String.IsNullOrWhiteSpace(campos[offSet + 4]) ? "Sem definição" : campos[offSet + 3];
+						var valorControle = campos[offSet + 4];
+						var descricao = campos[offSet + 6];
+						var projeto = campos[offSet + 7];
+						var sistema = campos[offSet + 8];
+						var categoria = campos[offSet + 9];
+						var tipoAtividade = campos[offSet + 10];
 						if (!String.IsNullOrWhiteSpace(descricao))
 						{
-							for (int i = 1; i < 4; i += 2)
+							for (var i = 0; i < horarios; i++)
 							{
-								String inicio = campos[i];
-								String termino = campos[i + 1];
+								var inicio = campos[i * 2 + 1];
+								var termino = campos[i * 2 + 2];
 								if ((termino.EmMinutos() - inicio.EmMinutos()) > 0)
 								{
-									Tarefa tarefa = timeSheet.Adicionar(projeto, sistema, categoria, tipoAtividade, data, inicio.PadLeft(5, '0'), termino.PadLeft(5, '0'), descricao, tipoControle, valorControle);
+									var tarefa = timeSheet.Adicionar(projeto, sistema, categoria, tipoAtividade, data, inicio.PadLeft(5, '0'), termino.PadLeft(5, '0'), descricao, tipoControle, valorControle);
 									Log(tarefa);
 								}
 							}
@@ -197,9 +188,9 @@ namespace MPSC.AutoFillTS.Model
 
 		private static TimeSheet LoadTxtFormatoCGS(String[] linhas)
 		{
-			TimeSheet timeSheet = new TimeSheet();
+			var timeSheet = new TimeSheet();
 			var competencia = "{0}/" + DateTime.Today.ToString("MMM/yyyy");
-			foreach (String linha in linhas)
+			foreach (var linha in linhas)
 			{
 				if (!String.IsNullOrWhiteSpace(linha))
 				{
@@ -221,11 +212,11 @@ namespace MPSC.AutoFillTS.Model
 						{
 							for (int i = 3; i < 12; i += 3)
 							{
-								String inicio = campos[i];
-								String termino = campos[i + 1];
+								var inicio = campos[i];
+								var termino = campos[i + 1];
 								if ((termino.EmMinutos() - inicio.EmMinutos()) > 0)
 								{
-									Tarefa tarefa = timeSheet.Adicionar(projeto, sistema, categoria, tipoAtividade, data, inicio.PadLeft(5, '0'), termino.PadLeft(5, '0'), descricao, tipoControle, valorControle);
+									var tarefa = timeSheet.Adicionar(projeto, sistema, categoria, tipoAtividade, data, inicio.PadLeft(5, '0'), termino.PadLeft(5, '0'), descricao, tipoControle, valorControle);
 									Log(tarefa);
 								}
 							}
@@ -245,35 +236,19 @@ namespace MPSC.AutoFillTS.Model
 
 		private static TimeSheetFormat IdentificarFormato(String[] linhas)
 		{
-			TimeSheetFormat timeSheetFormat = TimeSheetFormat.Invalido;
-			foreach (String linha in linhas)
-			{
-				if (String.IsNullOrWhiteSpace(linha))
-					continue;
-				else
-				{
-					timeSheetFormat = IdentificarFormatoLinha(linha);
-					break;
-				}
-			}
-			return timeSheetFormat;
-		}
+			var linha = linhas.FirstOrDefault(l => !String.IsNullOrWhiteSpace(l));
+			var campos = linha?.Split('\t');
 
-		private static TimeSheetFormat IdentificarFormatoLinha(String linha)
-		{
-			TimeSheetFormat timeSheetFormat = TimeSheetFormat.Invalido;
-			var campos = linha.Split('\t');
-			if (campos.Length <= 0)
+			if ((campos?.Length ?? 0) == 0)
 				throw new Exception("conteúdo Inválido");
 
-			if (Enum.TryParse<TimeSheetFormat>(campos[0], out timeSheetFormat))
-			{ }
+			if (Enum.TryParse(campos[0], out TimeSheetFormat timeSheetFormat))
+				return timeSheetFormat;
+
 			else if (campos.Length < 4)
 				throw new Exception("conteúdo Inválido");
-			else
-				timeSheetFormat = (TimeSheetFormat)campos.Length;
 
-			return timeSheetFormat;
+			return (TimeSheetFormat)campos.Length;
 		}
 	}
 }

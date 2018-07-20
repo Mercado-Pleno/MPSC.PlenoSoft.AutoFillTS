@@ -34,6 +34,8 @@
 			this.ckAutoSaveClick = new System.Windows.Forms.CheckBox();
 			this.ckPreencherMongeral = new System.Windows.Forms.CheckBox();
 			this.ckPreencherProvider = new System.Windows.Forms.CheckBox();
+			this.lblStatusBar = new System.Windows.Forms.Label();
+			this.lblStatus = new System.Windows.Forms.Label();
 			((System.ComponentModel.ISupportInitialize)(this.dgvHorarios)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -113,11 +115,33 @@
 			this.ckPreencherProvider.Text = "Preencher Provider";
 			this.ckPreencherProvider.UseVisualStyleBackColor = true;
 			// 
+			// lblStatusBar
+			// 
+			this.lblStatusBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+			this.lblStatusBar.Location = new System.Drawing.Point(40, 553);
+			this.lblStatusBar.Name = "lblStatusBar";
+			this.lblStatusBar.Size = new System.Drawing.Size(300, 15);
+			this.lblStatusBar.TabIndex = 7;
+			this.lblStatusBar.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+			// 
+			// lblStatus
+			// 
+			this.lblStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.lblStatus.Location = new System.Drawing.Point(0, 553);
+			this.lblStatus.Name = "lblStatus";
+			this.lblStatus.Size = new System.Drawing.Size(40, 15);
+			this.lblStatus.TabIndex = 8;
+			this.lblStatus.Text = "Status:";
+			this.lblStatus.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+			// 
 			// TSForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(792, 573);
+			this.Controls.Add(this.lblStatus);
+			this.Controls.Add(this.lblStatusBar);
 			this.Controls.Add(this.ckPreencherProvider);
 			this.Controls.Add(this.ckPreencherMongeral);
 			this.Controls.Add(this.ckAutoSaveClick);
@@ -142,5 +166,7 @@
 		private System.Windows.Forms.CheckBox ckAutoSaveClick;
 		private System.Windows.Forms.CheckBox ckPreencherMongeral;
 		private System.Windows.Forms.CheckBox ckPreencherProvider;
+		private System.Windows.Forms.Label lblStatusBar;
+		private System.Windows.Forms.Label lblStatus;
 	}
 }

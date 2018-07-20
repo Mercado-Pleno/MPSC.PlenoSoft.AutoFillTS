@@ -16,9 +16,10 @@ namespace MPSC.AutoFillTS.View
 		public TSForm()
 		{
 			InitializeComponent();
-			this.Text += " " + CoreAssembly.VersionString;
-			this.TopLevel = true;
+			Text += " " + CoreAssembly.VersionString;
+			TopLevel = true;
 			Mensagem.iMensagem = this;
+			lblStatusBar.Text = CoreAssembly.VersionString;
 		}
 
 		private void Analisar(Object sender, EventArgs e)
@@ -27,11 +28,16 @@ namespace MPSC.AutoFillTS.View
 			{
 				var timeSheet = TimeSheetFactory.Load(txtHorarios.Text);
 				dgvHorarios.DataSource = (timeSheet == null) ? null : timeSheet.Tarefas;
-				dgvHorarios.AutoResizeColumns();
+				lblStatusBar.Text = $"Ok às {DateTime.Now.ToString("dd/MM/yy HH:mm:ss")}";
 			}
 			catch (Exception exception)
 			{
-				MessageBox.Show(exception.Message);
+				dgvHorarios.DataSource = new TimeSheet().Tarefas;
+				lblStatusBar.Text = $"{exception.Message} às {DateTime.Now.ToString("dd/MM/yy HH:mm:ss")}";
+			}
+			finally
+			{
+				dgvHorarios.AutoResizeColumns();
 			}
 		}
 
@@ -39,14 +45,14 @@ namespace MPSC.AutoFillTS.View
 		{
 			Msg = String.Empty;
 			if (String.IsNullOrWhiteSpace(txtHorarios.Text))
-				MessageBox.Show("Informe seus horários");
+				MessageBox.Show(lblStatusBar.Text = $"Informe seus horários às {DateTime.Now.ToString("dd/MM/yy HH:mm:ss")}");
 			else
 			{
 				var timeSheet = TimeSheetFactory.Load(txtHorarios.Text);
 				if (timeSheet == null)
-					MessageBox.Show("Informe seus horários corretamente");
+					MessageBox.Show(lblStatusBar.Text = $"Informe seus horários corretamente às {DateTime.Now.ToString("dd/MM/yy HH:mm:ss")}");
 				else if (!timeSheet.Tarefas.Any())
-					MessageBox.Show("Não há horários para processar");
+					MessageBox.Show(lblStatusBar.Text = $"Não há horários para processar às {DateTime.Now.ToString("dd/MM/yy HH:mm:ss")}");
 				else
 				{
 					dgvHorarios.DataSource = timeSheet.Tarefas;
