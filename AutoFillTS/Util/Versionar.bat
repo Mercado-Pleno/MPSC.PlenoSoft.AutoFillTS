@@ -1,2 +1,2 @@
 
-MPSC.LBJC.Versionador.exe D:\Prj\SVN\MPSC.AutoFillTS\AutoFillTS\*
+MPSC.LBJC.Versionador.exe D:\Prj\TFS\MASP.AutoFillTS\*
