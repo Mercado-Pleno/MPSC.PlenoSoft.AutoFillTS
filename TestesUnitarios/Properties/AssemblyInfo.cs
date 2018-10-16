@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("Pleno - Preencha automaticamente seu controle de horas")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Mercado Pleno Soluções em Computação Ltda M.E.")]
-[assembly: AssemblyProduct("MPSC.TestesUnitarios.dll")]
+[assembly: AssemblyProduct("MASP.TestesUnitarios.dll")]
 [assembly: AssemblyCopyright("Copyright © MPSC 2014")]
 [assembly: AssemblyTrademark("Mercado Pleno Soluções em Computação")]
 [assembly: AssemblyCulture("")]

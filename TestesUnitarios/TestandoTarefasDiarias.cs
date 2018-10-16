@@ -5,7 +5,7 @@ using MPSC.AutoFillTS.Model;
 using System;
 using System.Linq;
 
-namespace MPSC.TestesUnitarios
+namespace MASP.TestesUnitarios
 {
 	[TestClass]
 	public class TestandoTarefasDiarias
