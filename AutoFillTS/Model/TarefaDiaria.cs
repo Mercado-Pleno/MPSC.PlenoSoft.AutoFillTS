@@ -6,14 +6,15 @@ namespace MPSC.AutoFillTS.Model
 {
 	public class TarefaDiaria
 	{
-		private readonly TimeSpan oitoHoras = TimeSpan.FromHours(8);
+		private static readonly TimeSpan oitoHoras = TimeSpan.FromHours(8);
+		private static readonly TimeSpan vinteDuasHoras = TimeSpan.FromHours(22);
 		public readonly DateTime Data;
 		public readonly IEnumerable<Periodo> Horarios;
 		public readonly String Descricao;
 
 		public TimeSpan Inicio { get { return Horarios.Min(h => h.Inicio); } }
 		public TimeSpan Termino { get { return Horarios.Max(h => h.Termino); } }
-		public TimeSpan TerminoHorasComuns { get { return Termino.Add(-HorasExtras); } }
+		public TimeSpan TerminoHorasComuns { get { return Min(Termino.Add(-HorasExtras), vinteDuasHoras); } }
 		public TimeSpan HorasExtras { get { return (TotalTrabalhado > oitoHoras) ? TotalTrabalhado - oitoHoras : TimeSpan.Zero; } }
 		public TimeSpan TotalTrabalhado { get { return TimeSpan.FromTicks(Horarios.Sum(h => (h.Termino - h.Inicio).Ticks)); } }
 		public TimeSpan TempoComIntervalos { get { return (Termino - Inicio); } }
@@ -30,5 +31,8 @@ namespace MPSC.AutoFillTS.Model
 		{
 			return tarefas.GroupBy(t => t.Data).Select(a => new TarefaDiaria(a.Key, a)).ToArray();
 		}
+
+		public static TimeSpan Min(params TimeSpan[] horas) => horas.Min();
+		public static TimeSpan Max(params TimeSpan[] horas) => horas.Max();
 	}
 }
