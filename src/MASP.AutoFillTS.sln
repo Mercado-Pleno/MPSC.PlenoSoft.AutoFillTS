@@ -5,13 +5,6 @@ VisualStudioVersion = 15.0.27428.2037
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MASP.AutoFillTS", "AutoFillTS\MASP.AutoFillTS.csproj", "{2E48EFAC-9ACF-4A40-B20B-1C67B075636C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{48ACFF75-ABD1-474B-9DB0-B81E45AD68D5}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MASP.TestesUnitarios", "TestesUnitarios\MASP.TestesUnitarios.csproj", "{468C27FD-99BC-4C32-BEA1-2BBAC49638AB}"
 EndProject
 Global
