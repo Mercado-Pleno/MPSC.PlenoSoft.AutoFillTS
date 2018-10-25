@@ -10,6 +10,8 @@ namespace MPSC.AutoFillTS.Controller
 {
 	public class ProviderItAutoFillTS : AbstractAutoFillTS
 	{
+		private TextField[] cacheTexts;
+		private SelectList[] cacheCombos;
 		protected override String UrlLogin { get { return "http://186.215.208.203/intranet/login/login.asp"; } }
 		protected override IEnumerable<String> Urls
 		{
@@ -21,9 +23,6 @@ namespace MPSC.AutoFillTS.Controller
 				yield return "http://186.215.208.203/intranet/bcp/apropriacao_de_horas/timesheet/";
 			}
 		}
-
-		private TextField[] cache1;
-		private SelectList[] cache2;
 
 		public ProviderItAutoFillTS(Boolean processar, Boolean autoSaveClick) : base(processar, autoSaveClick) { }
 
@@ -71,8 +70,8 @@ namespace MPSC.AutoFillTS.Controller
 			while (!document.ContainsAllText("REGISTRO DE HORAS", "COMPETÊNCIA", "HORAS NORMAIS", "HORAS EXTRAS", "SOBREAVISO"))
 				WatiNExtension.Wait();
 
-			cache1 = document.TextFields.Where(tf => tf.Exists).ToArray();
-			cache2 = document.SelectLists.Where(tf => tf.Exists).ToArray();
+			cacheTexts = document.TextFields.Where(tf => tf.Exists).ToArray();
+			cacheCombos = document.SelectLists.Where(tf => tf.Exists).ToArray();
 		}
 
 		private static TableCell GetCell(IElementContainer container, String tipo)
@@ -105,11 +104,11 @@ namespace MPSC.AutoFillTS.Controller
 		{
 			var sufixo = String.Format("_{0}_{1}", tarefaDiaria.Data.ToString("yyyyMMdd"), "1");
 
-			cache2.FirstOrDefault(e => e.FindByIdOrName("ID_PROJETO" + sufixo)).Select(51432, false);
-			cache1.FirstOrDefault(e => e.FindByIdOrName("hora_ini" + sufixo)).Select(tarefaDiaria.Inicio.ToHora(), false);
-			cache1.FirstOrDefault(e => e.FindByIdOrName("hora_fim" + sufixo)).Select(tarefaDiaria.TerminoHorasComuns.ToHora(), false);
-			cache1.FirstOrDefault(e => e.FindByIdOrName("intervalo" + sufixo)).Select(tarefaDiaria.Intervalo.ToHora(), false)?.Focus();
-			cache1.FirstOrDefault(e => e.FindByIdOrName("DESCRICAO" + sufixo)).Select(tarefaDiaria.Descricao, false);
+			cacheCombos.FirstOrDefault(e => e.FindByIdOrName("ID_PROJETO" + sufixo)).Select(51432, false);
+			cacheTexts.FirstOrDefault(e => e.FindByIdOrName("hora_ini" + sufixo)).Select(tarefaDiaria.Inicio.ToHora(), false);
+			cacheTexts.FirstOrDefault(e => e.FindByIdOrName("hora_fim" + sufixo)).Select(tarefaDiaria.TerminoHorasComuns.ToHora(), false);
+			cacheTexts.FirstOrDefault(e => e.FindByIdOrName("intervalo" + sufixo)).Select(tarefaDiaria.Intervalo.ToHora(), false)?.Focus();
+			cacheTexts.FirstOrDefault(e => e.FindByIdOrName("DESCRICAO" + sufixo)).Select(tarefaDiaria.Descricao, false);
 
 			return true;
 		}
@@ -120,11 +119,11 @@ namespace MPSC.AutoFillTS.Controller
 			{
 				var sufixo = String.Format("_{0}_{1}", tarefaDiaria.Data.ToString("yyyyMMdd"), "1");
 
-				cache2.FirstOrDefault(e => e.FindByIdOrName("ID_PROJETO" + sufixo)).Select(51432, false);
-				cache1.FirstOrDefault(e => e.FindByIdOrName("hora_ini" + sufixo)).Select(tarefaDiaria.TerminoHorasComuns.ToHora(), false);
-				cache1.FirstOrDefault(e => e.FindByIdOrName("hora_fim" + sufixo)).Select(tarefaDiaria.Termino.ToHora(), false);
-				cache1.FirstOrDefault(e => e.FindByIdOrName("intervalo" + sufixo)).Select(TimeSpan.Zero.ToHora(), false).Focus();
-				cache1.FirstOrDefault(e => e.FindByIdOrName("DESCRICAO" + sufixo)).Select(tarefaDiaria.Descricao, false);
+				cacheCombos.FirstOrDefault(e => e.FindByIdOrName("ID_PROJETO" + sufixo)).Select(51432, false);
+				cacheTexts.FirstOrDefault(e => e.FindByIdOrName("hora_ini" + sufixo)).Select(tarefaDiaria.TerminoHorasComuns.ToHora(), false);
+				cacheTexts.FirstOrDefault(e => e.FindByIdOrName("hora_fim" + sufixo)).Select(tarefaDiaria.Termino.ToHora(), false);
+				cacheTexts.FirstOrDefault(e => e.FindByIdOrName("intervalo" + sufixo)).Select(TimeSpan.Zero.ToHora(), false).Focus();
+				cacheTexts.FirstOrDefault(e => e.FindByIdOrName("DESCRICAO" + sufixo)).Select(tarefaDiaria.Descricao, false);
 			}
 			return true;
 		}
