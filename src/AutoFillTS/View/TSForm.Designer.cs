@@ -1,4 +1,4 @@
-﻿namespace MPSC.AutoFillTS.View
+﻿namespace MPSC.PlenoSoft.AutoFillTS.View
 {
 	partial class TSForm
 	{

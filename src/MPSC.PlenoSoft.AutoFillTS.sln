@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2037
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MASP.AutoFillTS", "AutoFillTS\MASP.AutoFillTS.csproj", "{2E48EFAC-9ACF-4A40-B20B-1C67B075636C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPSC.PlenoSoft.AutoFillTS", "AutoFillTS\MPSC.PlenoSoft.AutoFillTS.csproj", "{2E48EFAC-9ACF-4A40-B20B-1C67B075636C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MASP.TestesUnitarios", "TestesUnitarios\MASP.TestesUnitarios.csproj", "{468C27FD-99BC-4C32-BEA1-2BBAC49638AB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MPSC.PlenoSoft.AutoFillTS.TestesUnitarios", "TestesUnitarios\MPSC.PlenoSoft.AutoFillTS.TestesUnitarios.csproj", "{468C27FD-99BC-4C32-BEA1-2BBAC49638AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace MPSC.AutoFillTS.Model
+namespace MPSC.PlenoSoft.AutoFillTS.Model
 {
 	public class TimeSheet
 	{

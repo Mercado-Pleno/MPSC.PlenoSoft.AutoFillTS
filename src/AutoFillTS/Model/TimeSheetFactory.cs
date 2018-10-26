@@ -1,9 +1,9 @@
-﻿using MPSC.AutoFillTS.Infra;
+﻿using MPSC.PlenoSoft.AutoFillTS.Infra;
 using System;
 using System.IO;
 using System.Linq;
 
-namespace MPSC.AutoFillTS.Model
+namespace MPSC.PlenoSoft.AutoFillTS.Model
 {
 	public class TimeSheetFactory
 	{

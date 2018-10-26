@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace MPSC.AutoFillTS.Infra
+namespace MPSC.PlenoSoft.AutoFillTS.Infra
 {
 	public interface IMensagem
 	{

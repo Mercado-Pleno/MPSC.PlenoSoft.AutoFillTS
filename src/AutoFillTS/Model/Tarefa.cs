@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MPSC.AutoFillTS.Model
+namespace MPSC.PlenoSoft.AutoFillTS.Model
 {
 	public class Tarefa
 	{

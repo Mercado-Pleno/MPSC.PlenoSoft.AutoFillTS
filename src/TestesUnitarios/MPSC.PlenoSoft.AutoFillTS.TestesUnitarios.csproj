@@ -6,8 +6,8 @@
     <ProjectGuid>{468C27FD-99BC-4C32-BEA1-2BBAC49638AB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MASP.TestesUnitarios</RootNamespace>
-    <AssemblyName>MASP.TestesUnitarios</AssemblyName>
+    <RootNamespace>MPSC.PlenoSoft.AutoFillTS.TestesUnitarios</RootNamespace>
+    <AssemblyName>MPSC.PlenoSoft.AutoFillTS.TestesUnitarios</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -63,9 +63,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AutoFillTS\MASP.AutoFillTS.csproj">
+    <ProjectReference Include="..\AutoFillTS\MPSC.PlenoSoft.AutoFillTS.csproj">
       <Project>{2e48efac-9acf-4a40-b20b-1c67b075636c}</Project>
-      <Name>MASP.AutoFillTS</Name>
+      <Name>MPSC.PlenoSoft.AutoFillTS</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

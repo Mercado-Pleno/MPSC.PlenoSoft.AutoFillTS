@@ -1,13 +1,13 @@
-﻿using MPSC.AutoFillTS.Controller;
-using MPSC.AutoFillTS.Infra;
-using MPSC.AutoFillTS.Model;
+﻿using MPSC.PlenoSoft.AutoFillTS.Controller;
+using MPSC.PlenoSoft.AutoFillTS.Infra;
+using MPSC.PlenoSoft.AutoFillTS.Model;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
-namespace MPSC.AutoFillTS.View
+namespace MPSC.PlenoSoft.AutoFillTS.View
 {
 	public partial class TSForm : Form, IMensagem
 	{

@@ -1,12 +1,12 @@
-﻿using MPSC.AutoFillTS.Infra;
-using MPSC.AutoFillTS.Model;
+﻿using MPSC.PlenoSoft.AutoFillTS.Infra;
+using MPSC.PlenoSoft.AutoFillTS.Model;
 using MPSC.PlenoSoft.WatiN.Extension.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using WatiN.Core;
 
-namespace MPSC.AutoFillTS.Controller
+namespace MPSC.PlenoSoft.AutoFillTS.Controller
 {
 	public class ProviderItAutoFillTS : AbstractAutoFillTS
 	{

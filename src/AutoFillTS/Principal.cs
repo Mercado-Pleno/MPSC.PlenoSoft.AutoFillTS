@@ -1,10 +1,10 @@
-﻿using MPSC.AutoFillTS.View;
+﻿using MPSC.PlenoSoft.AutoFillTS.View;
 using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace MPSC.AutoFillTS
+namespace MPSC.PlenoSoft.AutoFillTS
 {
 	public static class Principal
 	{

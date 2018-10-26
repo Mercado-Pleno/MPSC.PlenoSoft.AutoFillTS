@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace MPSC.AutoFillTS.Infra
+namespace MPSC.PlenoSoft.AutoFillTS.Infra
 {
 	public static class Util
 	{

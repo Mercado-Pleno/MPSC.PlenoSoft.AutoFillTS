@@ -1,9 +1,9 @@
-﻿using MPSC.AutoFillTS.Infra;
-using MPSC.AutoFillTS.Model;
+﻿using MPSC.PlenoSoft.AutoFillTS.Infra;
+using MPSC.PlenoSoft.AutoFillTS.Model;
 using System;
 using System.Linq;
 
-namespace MPSC.AutoFillTS.Controller
+namespace MPSC.PlenoSoft.AutoFillTS.Controller
 {
 	public class TimeSheetAnalyser
 	{

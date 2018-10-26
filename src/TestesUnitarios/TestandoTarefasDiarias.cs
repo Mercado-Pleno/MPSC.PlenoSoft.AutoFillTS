@@ -1,11 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MPSC.AutoFillTS.Controller;
-using MPSC.AutoFillTS.Infra;
-using MPSC.AutoFillTS.Model;
+using MPSC.PlenoSoft.AutoFillTS.Controller;
+using MPSC.PlenoSoft.AutoFillTS.Infra;
+using MPSC.PlenoSoft.AutoFillTS.Model;
 using System;
 using System.Linq;
 
-namespace MASP.TestesUnitarios
+namespace MPSC.PlenoSoft.AutoFillTS.TestesUnitarios
 {
 	[TestClass]
 	public class TestandoTarefasDiarias

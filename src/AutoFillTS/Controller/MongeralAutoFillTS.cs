@@ -1,10 +1,10 @@
-﻿using MPSC.AutoFillTS.Model;
+﻿using MPSC.PlenoSoft.AutoFillTS.Model;
 using MPSC.PlenoSoft.WatiN.Extension.Util;
 using System;
 using System.Collections.Generic;
 using WatiN.Core;
 
-namespace MPSC.AutoFillTS.Controller
+namespace MPSC.PlenoSoft.AutoFillTS.Controller
 {
 	public class MongeralAutoFillTS : AbstractAutoFillTS
 	{

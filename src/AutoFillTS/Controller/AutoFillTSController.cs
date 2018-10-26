@@ -1,9 +1,9 @@
-﻿using MPSC.AutoFillTS.Model;
+﻿using MPSC.PlenoSoft.AutoFillTS.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MPSC.AutoFillTS.Controller
+namespace MPSC.PlenoSoft.AutoFillTS.Controller
 {
 	public class AutoFillTSController
 	{

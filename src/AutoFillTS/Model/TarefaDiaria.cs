@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MPSC.AutoFillTS.Model
+namespace MPSC.PlenoSoft.AutoFillTS.Model
 {
 	public class TarefaDiaria
 	{

@@ -1,7 +1,7 @@
-﻿using MPSC.AutoFillTS.Infra;
+﻿using MPSC.PlenoSoft.AutoFillTS.Infra;
 using System;
 
-namespace MPSC.AutoFillTS.Model
+namespace MPSC.PlenoSoft.AutoFillTS.Model
 {
 	public class Periodo
 	{
