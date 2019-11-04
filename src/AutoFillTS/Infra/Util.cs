@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
-using System.Windows.Forms;
 
 namespace MPSC.PlenoSoft.AutoFillTS.Infra
 {

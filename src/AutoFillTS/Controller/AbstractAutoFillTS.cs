@@ -1,8 +1,9 @@
-﻿using MPSC.PlenoSoft.AutoFillTS.Model;
-using MPSC.PlenoSoft.WatiN.Extension.Util;
+﻿using MPSC.PlenoSoft.AutoFillTS.Infra;
+using MPSC.PlenoSoft.AutoFillTS.Model;
+using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
-using WatiN.Core;
+
 
 namespace MPSC.PlenoSoft.AutoFillTS.Controller
 {
@@ -32,8 +33,8 @@ deleteAllCookies();";
 			AutoSaveClick = autoSaveClick;
 		}
 
-		protected abstract void EsperarPeloLogin(Document document);
-		protected abstract Boolean Fill(Document document, TimeSheet timeSheet);
+		protected abstract void EsperarPeloLogin(IWebDriver document);
+		protected abstract Boolean Fill(IWebDriver document, TimeSheet timeSheet);
 
 		public Boolean Processar(TimeSheet timeSheet)
 		{
@@ -43,7 +44,7 @@ deleteAllCookies();";
 		private Boolean OrquestrarPreenchimento(TimeSheet timeSheet)
 		{
 			var ok = true;
-			using (var browser = WatiNExtension.ObterNavegador<IE>())
+			using (var browser = Factory.ChromeDriver(@"..\Libs\", "chromedriver.exe"))
 			{
 				browser.IrParaEndereco(UrlLogin, 1);
 				browser.RunScript(deleteAllCookies);
@@ -59,9 +60,8 @@ deleteAllCookies();";
 			return ok;
 		}
 
-		protected virtual void WaitFinish(Browser browser)
+		protected virtual void WaitFinish(IWebDriver browser)
 		{
-			WatiNExtension.Wait();
 			try { browser.Close(); }
 			catch (Exception) { }
 		}

@@ -1,8 +1,8 @@
-﻿using MPSC.PlenoSoft.AutoFillTS.Model;
-using MPSC.PlenoSoft.WatiN.Extension.Util;
+﻿using MPSC.PlenoSoft.AutoFillTS.Infra;
+using MPSC.PlenoSoft.AutoFillTS.Model;
+using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
-using WatiN.Core;
 
 namespace MPSC.PlenoSoft.AutoFillTS.Controller
 {
@@ -13,12 +13,12 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 
 		public MongeralAutoFillTS(Boolean processar, Boolean autoSaveClick) : base(processar, autoSaveClick) { }
 
-		protected override void EsperarPeloLogin(Document document)
+		protected override void EsperarPeloLogin(IWebDriver document)
 		{
-			var ok = document.WaitContainsAllText(15, "Tipo de Atividade");
+			var ok = document.WaitUntilContainsAllText(false, "Tipo de Atividade");
 		}
 
-		protected override bool Fill(Document document, TimeSheet timeSheet)
+		protected override bool Fill(IWebDriver document, TimeSheet timeSheet)
 		{
 			var ok = true;
 			foreach (var item in timeSheet.Tarefas)
@@ -36,36 +36,33 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 
 		}
 
-		private Boolean PreencherPorTarefa(Document document, Tarefa tarefa)
+		private Boolean PreencherPorTarefa(IWebDriver document, Tarefa tarefa)
 		{
-			WatiNExtension.Wait();
+			document.FindByIdOrName("ddlProjeto").Select(tarefa.Projeto, true);
+			document.FindByIdOrName("ddlSistema").Select(tarefa.Sistema, true);
+			document.FindByIdOrName("ddlCategoria").Select(tarefa.Categoria, true);
+			document.FindByIdOrName("ddlTipoAtividade").Select(tarefa.TipoAtividade, true);
 
-			document.SelectList(e => e.FindByIdOrName("ddlProjeto")).Select(tarefa.Projeto, true);
-			document.SelectList(e => e.FindByIdOrName("ddlSistema")).Select(tarefa.Sistema, true);
-			document.SelectList(e => e.FindByIdOrName("ddlCategoria")).Select(tarefa.Categoria, true);
-			document.SelectList(e => e.FindByIdOrName("ddlTipoAtividade")).Select(tarefa.TipoAtividade, true);
+			document.FindByIdOrName("dtcDataDate").Select(tarefa.Data.ToString("dd/MM/yyyy"), false);
+			document.FindByIdOrName("txtInicioAtividade").Select(tarefa.Inicio, false);
+			document.FindByIdOrName("txtFimAtividade").Select(tarefa.Termino, false);
+			document.FindByIdOrName("txtDescricao").Select(tarefa.Descricao, false);
+			document.FindByIdOrName("ddlTipoControle").Select(tarefa.TipoControle, false);
+			document.FindByIdOrName("txtTipoControleDetalhes").Select(tarefa.ValorControle, false);
+			document.FindByIdOrName("btnSalvar").Select(AutoSaveClick, false);
 
-			document.TextField(e => e.FindByIdOrName("dtcDataDate")).Select(tarefa.Data.ToString("dd/MM/yyyy"), false);
-			document.TextField(e => e.FindByIdOrName("txtInicioAtividade")).Select(tarefa.Inicio, false);
-			document.TextField(e => e.FindByIdOrName("txtFimAtividade")).Select(tarefa.Termino, false);
-			document.TextField(e => e.FindByIdOrName("txtDescricao")).Select(tarefa.Descricao, false);
-			document.SelectList(e => e.FindByIdOrName("ddlTipoControle")).Select(tarefa.TipoControle, false);
-			document.TextField(e => e.FindByIdOrName("txtTipoControleDetalhes")).Select(tarefa.ValorControle, false);
-			document.Link(e => e.FindByIdOrName("btnSalvar")).Select(AutoSaveClick, false);
-
-			while (document.EstaPreenchido("txtDescricao", tarefa.Descricao))
-				WatiNExtension.Wait();
+			//while (document.EstaPreenchido("txtDescricao", tarefa.Descricao))
+			//	WatiNExtension.Wait();
 
 			return true;
 		}
 
-		protected override void WaitFinish(Browser browser)
+		protected override void WaitFinish(IWebDriver browser)
 		{
 			try
 			{
-				browser.Link(e => e.FindByIdOrName("Btn_Fechar")).Select(true, false);
-				while (browser.ContainsText("Soma="))
-					WatiNExtension.Wait();
+				browser.FindByIdOrName("Btn_Fechar").Select(true, false);
+				browser.WaitWhileContainsAllText(true, "Soma=");
 			}
 			catch (Exception) { }
 			finally
