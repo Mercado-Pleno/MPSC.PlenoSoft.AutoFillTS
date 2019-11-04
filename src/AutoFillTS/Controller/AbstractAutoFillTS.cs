@@ -9,19 +9,6 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 {
 	public abstract class AbstractAutoFillTS
 	{
-		private const String deleteAllCookies = @"
-function deleteAllCookies() {
-    var cookies = document.cookie.split("";"");
-
-    for (var i = 0; i < cookies.length; i++) {
-        var cookie = cookies[i];
-		var eqPos = cookie.indexOf(""="");
-		var name = (eqPos > -1) ? cookie.substr(0, eqPos) : cookie;
-		document.cookie = name + ""=;expires=Thu, 01 Jan 1970 00:00:00 GMT"";
-    }
-}
-deleteAllCookies();";
-
 		protected abstract String UrlLogin { get; }
 		protected abstract IEnumerable<String> Urls { get; }
 		protected readonly Boolean AutoSaveClick;
@@ -44,17 +31,17 @@ deleteAllCookies();";
 		private Boolean OrquestrarPreenchimento(TimeSheet timeSheet)
 		{
 			var ok = true;
-			using (var browser = Factory.ChromeDriver(@"..\Libs\", "chromedriver.exe"))
+			using (var webDriver = Factory.ChromeDriver(@"..\Libs\", "chromedriver.exe"))
 			{
-				browser.IrParaEndereco(UrlLogin, 1);
-				browser.RunScript(deleteAllCookies);
-				EsperarPeloLogin(browser);
+				webDriver.IrParaEndereco(UrlLogin, 1);
+				webDriver.Manage().Cookies.DeleteAllCookies();
+				EsperarPeloLogin(webDriver);
 
 				foreach (var url in Urls)
-					browser.IrParaEndereco(url, 1);
+					webDriver.IrParaEndereco(url, 1);
 
-				ok = Fill(browser, timeSheet);
-				if (ok) WaitFinish(browser);
+				ok = Fill(webDriver, timeSheet);
+				if (ok) WaitFinish(webDriver);
 			}
 
 			return ok;

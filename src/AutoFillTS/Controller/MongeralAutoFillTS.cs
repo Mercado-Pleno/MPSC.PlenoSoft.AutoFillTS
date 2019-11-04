@@ -8,8 +8,8 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 {
 	public class MongeralAutoFillTS : AbstractAutoFillTS
 	{
-		protected override string UrlLogin { get { return "http://gestaodeatividades.mongeral.seguros/Lists/RegistrosSistemas/NewForm.aspx"; } }
-		protected override IEnumerable<String> Urls { get { yield return UrlLogin; } }
+		protected override string UrlLogin { get { return "http://gestaodeatividades.mongeral.seguros/SitePages/P%C3%A1gina%20Inicial.aspx"; } }
+		protected override IEnumerable<String> Urls { get { yield return "http://gestaodeatividades.mongeral.seguros/Lists/RegistrosSistemas/NewForm.aspx"; } }
 
 		public MongeralAutoFillTS(Boolean processar, Boolean autoSaveClick) : base(processar, autoSaveClick) { }
 

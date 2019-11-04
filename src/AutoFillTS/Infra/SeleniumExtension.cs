@@ -6,28 +6,27 @@ using System.Threading;
 
 namespace MPSC.PlenoSoft.AutoFillTS.Infra
 {
-
 	public static class Factory
 	{
-		public static ChromeDriver ChromeDriver(String driverPath, String driverExecutableFileName)
+		public static IWebDriver ChromeDriver(String driverPath, String driverExecutableFileName)
 		{
 			var chromeDriverService = ChromeDriverService.CreateDefaultService(driverPath, driverExecutableFileName ?? "chromedriver.exe");
 			chromeDriverService.Port = 54321;
 			chromeDriverService.PortServerAddress = "54321";
-			var chromeOptions = new ChromeOptions() { AcceptInsecureCertificates = true, PageLoadStrategy = PageLoadStrategy.Normal };
+			chromeDriverService.HideCommandPromptWindow = true;
+			var chromeOptions = new ChromeOptions { AcceptInsecureCertificates = true, PageLoadStrategy = PageLoadStrategy.Eager, UnhandledPromptBehavior = UnhandledPromptBehavior.Ignore };
 			return new ChromeDriver(chromeDriverService, chromeOptions, TimeSpan.FromSeconds(10));
 		}
 	}
+
+
 	public static class SeleniumExtension
 	{
-
-
 		public static Int32 WaitLoopSleep = 250;
 
 		public static void IrParaEndereco(this IWebDriver webDriver, String endereco, int waitInSeconds = 0)
 		{
-			webDriver.Navigate().GoToUrl(endereco);
-			Thread.Sleep(waitInSeconds * 1000);
+			webDriver.Navigate().GoToUrl(new Uri(endereco, UriKind.Absolute));
 		}
 
 		public static void RunScript(this IWebDriver webDriver, String script, int waitInSeconds = 0)
