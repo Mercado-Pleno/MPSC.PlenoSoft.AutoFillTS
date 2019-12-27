@@ -97,7 +97,7 @@ namespace MPSC.PlenoSoft.AutoFillTS.Infra
 			try
 			{
 				var dma = data.Split('/', '-', '.');
-				int ano = (dma.Length == 3) ? Convert.ToInt32(dma[2]) : DateTime.Today.Year;
+				int ano = (dma.Length == 3) && IsDigits(dma[2]) ? Convert.ToInt32(dma[2]) : DateTime.Today.Year;
 				int mes = IsDigits(dma[1]) ? Convert.ToInt32(dma[1]) : ConverterEmNumero(dma[1]);
 				int dia = Convert.ToInt32(dma[0]);
 				if (ano < 100)

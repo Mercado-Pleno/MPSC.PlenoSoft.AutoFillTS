@@ -33,7 +33,6 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 				}
 			}
 			return ok;
-
 		}
 
 		private Boolean PreencherPorTarefa(Document document, Tarefa tarefa)
