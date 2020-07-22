@@ -1,4 +1,5 @@
 ﻿using MPSC.PlenoSoft.AutoFillTS.View;
+using MPSC.PlenoSoft.Selenium.Extension;
 using System;
 using System.Diagnostics;
 using System.Reflection;
@@ -11,6 +12,7 @@ namespace MPSC.PlenoSoft.AutoFillTS
 		[STAThread]
 		public static void Main(String[] args)
 		{
+			var versao = ChromeUpdateDriverVersion.Update();
 			Application.Run(new TSForm());
 		}
 	}

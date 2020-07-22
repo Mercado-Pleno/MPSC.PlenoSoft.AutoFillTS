@@ -1,17 +1,21 @@
 ﻿using MPSC.PlenoSoft.AutoFillTS.Infra;
 using MPSC.PlenoSoft.AutoFillTS.Model;
+using MPSC.PlenoSoft.Selenium.Extension;
 using MPSC.PlenoSoft.WatiN.Extension.Util;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Remote;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using WatiN.Core;
 
+
 namespace MPSC.PlenoSoft.AutoFillTS.Controller
 {
 	public class ProviderItAutoFillTS : AbstractAutoFillTS
 	{
-		private TextField[] cacheTexts;
-		private SelectList[] cacheCombos;
+		//private TextField[] cacheTexts;
+		//private SelectList[] cacheCombos;
 		protected override String UrlLogin { get { return "http://186.215.208.203/intranet/login/login.asp"; } }
 		protected override IEnumerable<String> Urls
 		{
@@ -26,34 +30,37 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 
 		public ProviderItAutoFillTS(Boolean processar, Boolean autoSaveClick) : base(processar, autoSaveClick) { }
 
-		protected override void EsperarPeloLogin(Document document)
+		protected override void EsperarPeloLogin(SeleniumRWD seleniumRWD)
 		{
 			WatiNExtension.Wait();
-
-			if (document.ContainsAnyText("INGRESSAR", "Recuperar senha"))
+			/*
+			if (webDriver.ContainsAnyText(false, "INGRESSAR", "Recuperar senha"))
 			{
-				var userOk = !String.IsNullOrWhiteSpace(document.TextField(e => e.FindByIdOrName("USUARIO")).Text);
-				var passOk = !String.IsNullOrWhiteSpace(document.TextField(e => e.FindByIdOrName("SENHA")).Text);
+				var userOk = !String.IsNullOrWhiteSpace(webDriver.TextField(e => e.FindByIdOrName("USUARIO")).Text);
+				var passOk = !String.IsNullOrWhiteSpace(webDriver.TextField(e => e.FindByIdOrName("SENHA")).Text);
 				if (userOk || passOk)
-					document.Button(e => e.FindByIdOrName("COMANDO")).Click();
+					webDriver.GetButton(e => e.FindByIdOrName("COMANDO")).Click();
 			}
-
-			while (document.ContainsAnyText("INGRESSAR", "Recuperar senha"))
+			*/
+			while (seleniumRWD.ContainsAnyText(false, "INGRESSAR", "Recuperar senha"))
 				WatiNExtension.Wait();
 		}
 
-		private static void SelecionarCompetencia(Document document, TimeSheet timeSheet)
+		private static void SelecionarCompetencia(SeleniumRWD seleniumRWD, TimeSheet timeSheet)
 		{
-			var comboCompetencia = document.SelectList(e => e.FindByIdOrName("ANOMES_TELA"));
+			/*
+			var comboCompetencia = webDriver.SelectList(e => e.FindByIdOrName("ANOMES_TELA"));
 			var data = timeSheet.TarefasDiarias.Min(t => t.Data);
 			var competencia = data.Year * 100 + data.Month;
 			if (comboCompetencia.GetAttributeValue("value") != competencia.ToString())
 				comboCompetencia.Select(competencia, true);
+			*/
 		}
 
-		private static void SelecionarTipoHora(Document document, string tipo)
+		private static void SelecionarTipoHora(SeleniumRWD seleniumRWD, string tipo)
 		{
-			var form = document.Form(e => e.FindByIdOrName("frmCadDoc"));
+			/*
+			var form = webDriver.Form(e => e.FindByIdOrName("frmCadDoc"));
 			var txt = form.TextField(e => e.FindByIdOrName("TIPO_HORA"));
 			var tipohora = $"tipoHora('{txt.Value}')";
 
@@ -63,15 +70,17 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 
 			if (!cell.OuterHtml.Contains(tipohora))
 				cell.Click();
+			*/
 		}
 
-		private void GuardarEmCache(Document document)
+		private void GuardarEmCache(SeleniumRWD seleniumRWD)
 		{
-			while (!document.ContainsAllText("REGISTRO DE HORAS", "COMPETÊNCIA", "HORAS NORMAIS", "HORAS EXTRAS", "SOBREAVISO"))
+			while (!seleniumRWD.ContainsAllText(true,"REGISTRO DE HORAS", "COMPETÊNCIA", "HORAS NORMAIS", "HORAS EXTRAS", "SOBREAVISO"))
 				WatiNExtension.Wait();
-
-			cacheTexts = document.TextFields.Where(tf => tf.Exists).ToArray();
-			cacheCombos = document.SelectLists.Where(tf => tf.Exists).ToArray();
+			/*
+			cacheTexts = webDriver.TextFields.Where(tf => tf.Exists).ToArray();
+			cacheCombos = webDriver.SelectLists.Where(tf => tf.Exists).ToArray();
+			*/
 		}
 
 		private static TableCell GetCell(IElementContainer container, String tipo)
@@ -82,26 +91,26 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 				(t.OuterText.Trim().ToUpper() == tipo.Trim().ToUpper()));
 		}
 
-		protected override bool Fill(Document document, TimeSheet timeSheet)
+		protected override bool Fill(SeleniumRWD seleniumRWD, TimeSheet timeSheet)
 		{
-			SelecionarCompetencia(document, timeSheet);
-			SelecionarTipoHora(document, "HORAS NORMAIS");
-			GuardarEmCache(document);
+			SelecionarCompetencia(seleniumRWD, timeSheet);
+			SelecionarTipoHora(seleniumRWD, "HORAS NORMAIS");
+			GuardarEmCache(seleniumRWD);
 			foreach (var item in timeSheet.TarefasDiarias)
-				PreencherHorasNormais(document, item);
+				PreencherHorasNormais(seleniumRWD, item);
 
-			if (Salvar(document))
+			if (Salvar(seleniumRWD))
 			{
-				SelecionarTipoHora(document, "HORAS EXTRAS");
-				GuardarEmCache(document);
+				SelecionarTipoHora(seleniumRWD, "HORAS EXTRAS");
+				GuardarEmCache(seleniumRWD);
 				foreach (var item in timeSheet.TarefasDiarias)
-					PreencherHorasExtas(document, item);
+					PreencherHorasExtas(seleniumRWD, item);
 			}
 			return true;
 		}
 
-		private Boolean PreencherHorasNormais(Document document, TarefaDiaria tarefaDiaria)
-		{
+		private Boolean PreencherHorasNormais(SeleniumRWD seleniumRWD, TarefaDiaria tarefaDiaria)
+		{/*
 			var sufixo = String.Format("_{0}_{1}", tarefaDiaria.Data.ToString("yyyyMMdd"), "1");
 
 			cacheCombos.FirstOrDefault(e => e.FindByIdOrName("ID_PROJETO" + sufixo)).Select(51432, false);
@@ -109,12 +118,13 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 			cacheTexts.FirstOrDefault(e => e.FindByIdOrName("hora_fim" + sufixo)).Select(tarefaDiaria.TerminoHorasComuns.ToHora(), false);
 			cacheTexts.FirstOrDefault(e => e.FindByIdOrName("intervalo" + sufixo)).Select(tarefaDiaria.Intervalo.ToHora(), false)?.Focus();
 			cacheTexts.FirstOrDefault(e => e.FindByIdOrName("DESCRICAO" + sufixo)).Select(tarefaDiaria.Descricao, false);
-
+			*/
 			return true;
 		}
 
-		private Boolean PreencherHorasExtas(Document document, TarefaDiaria tarefaDiaria)
+		private Boolean PreencherHorasExtas(SeleniumRWD seleniumRWD, TarefaDiaria tarefaDiaria)
 		{
+			/*
 			if (tarefaDiaria.HorasExtras > TimeSpan.Zero)
 			{
 				var sufixo = String.Format("_{0}_{1}", tarefaDiaria.Data.ToString("yyyyMMdd"), "1");
@@ -125,47 +135,49 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 				cacheTexts.FirstOrDefault(e => e.FindByIdOrName("intervalo" + sufixo)).Select(TimeSpan.Zero.ToHora(), false).Focus();
 				cacheTexts.FirstOrDefault(e => e.FindByIdOrName("DESCRICAO" + sufixo)).Select(tarefaDiaria.Descricao, false);
 			}
+			*/
 			return true;
 		}
 
-		protected override void WaitFinish(Browser browser)
+		protected override void WaitFinish(SeleniumRWD seleniumRWD)
 		{
 			try
 			{
-				Salvar(browser);
+				Salvar(seleniumRWD);
 			}
 			catch (Exception) { }
 			finally
 			{
 				WatiNExtension.Wait(TimeSpan.FromSeconds(5));
-				base.WaitFinish(browser);
+				base.WaitFinish(seleniumRWD);
 			}
 		}
 
-		private Boolean Salvar(Document document)
+		private Boolean Salvar(SeleniumRWD seleniumRWD)
 		{
-			var button = document.Button(e => e.FindByIdOrName("COMANDO_SALVAR_TOP"));
+			/*
+			var button = webDriver.GetButton(e => e.FindByIdOrName("COMANDO_SALVAR_TOP"));
 			if (AutoSaveClick)
-				button.ClickNoWait();
+				button.Click();
 			else
 				AguardeUsuarioGravar(button);
 
 			AguardeGravacao(button);
-
+			*/
 			return true;
 		}
 
-		private void AguardeUsuarioGravar(Button button)
+		private void AguardeUsuarioGravar(IWebElement button)
 		{
 			button.Focus();
-			while (button.Exists && button.Value == "SALVAR")
+			while (button.Exists() && button.Text == "SALVAR")
 				WatiNExtension.Wait();
 		}
 
-		private static void AguardeGravacao(Button button)
+		private static void AguardeGravacao(IWebElement button)
 		{
 			WatiNExtension.Wait(TimeSpan.FromSeconds(1));
-			while (button.Exists && button.Value != "SALVAR")
+			while (button.Exists() && button.Text != "SALVAR")
 				WatiNExtension.Wait(TimeSpan.FromSeconds(1));
 		}
 	}

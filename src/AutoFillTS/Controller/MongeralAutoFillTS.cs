@@ -1,8 +1,8 @@
 ﻿using MPSC.PlenoSoft.AutoFillTS.Model;
+using MPSC.PlenoSoft.Selenium.Extension;
 using MPSC.PlenoSoft.WatiN.Extension.Util;
 using System;
 using System.Collections.Generic;
-using WatiN.Core;
 
 namespace MPSC.PlenoSoft.AutoFillTS.Controller
 {
@@ -13,19 +13,22 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 
 		public MongeralAutoFillTS(Boolean processar, Boolean autoSaveClick) : base(processar, autoSaveClick) { }
 
-		protected override void EsperarPeloLogin(Document document)
+		protected override void EsperarPeloLogin(SeleniumRWD seleniumRWD)
 		{
-			var ok = document.WaitContainsAllText(15, "Tipo de Atividade");
+			while (seleniumRWD.IsEmptyPageSource)
+				WatiNExtension.Wait();
+
+			var _ = seleniumRWD.WaitUntilContainsAllText(Token, false, "Tipo de Atividade");
 		}
 
-		protected override bool Fill(Document document, TimeSheet timeSheet)
+		protected override bool Fill(SeleniumRWD seleniumRWD, TimeSheet timeSheet)
 		{
 			var ok = true;
 			foreach (var item in timeSheet.Tarefas)
 			{
 				try
 				{
-					ok = ok && PreencherPorTarefa(document, item);
+					ok = ok && PreencherPorTarefa(seleniumRWD, item);
 				}
 				catch (Exception)
 				{
@@ -35,41 +38,41 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 			return ok;
 		}
 
-		private Boolean PreencherPorTarefa(Document document, Tarefa tarefa)
+		private Boolean PreencherPorTarefa(SeleniumRWD seleniumRWD, Tarefa tarefa)
 		{
 			WatiNExtension.Wait();
 
-			document.SelectList(e => e.FindByIdOrName("ddlProjeto")).Select(tarefa.Projeto, true);
-			document.SelectList(e => e.FindByIdOrName("ddlSistema")).Select(tarefa.Sistema, true);
-			document.SelectList(e => e.FindByIdOrName("ddlCategoria")).Select(tarefa.Categoria, true);
-			document.SelectList(e => e.FindByIdOrName("ddlTipoAtividade")).Select(tarefa.TipoAtividade, true);
+			seleniumRWD.Set("ddlProjeto", tarefa.Projeto, 1500);
+			seleniumRWD.Set("ddlSistema", tarefa.Sistema);
+			seleniumRWD.Set("ddlCategoria", tarefa.Categoria, 1500);
+			seleniumRWD.Set("ddlTipoAtividade", tarefa.TipoAtividade);
 
-			document.TextField(e => e.FindByIdOrName("dtcDataDate")).Select(tarefa.Data.ToString("dd/MM/yyyy"), false);
-			document.TextField(e => e.FindByIdOrName("txtInicioAtividade")).Select(tarefa.Inicio, false);
-			document.TextField(e => e.FindByIdOrName("txtFimAtividade")).Select(tarefa.Termino, false);
-			document.TextField(e => e.FindByIdOrName("txtDescricao")).Select(tarefa.Descricao, false);
-			document.SelectList(e => e.FindByIdOrName("ddlTipoControle")).Select(tarefa.TipoControle, false);
-			document.TextField(e => e.FindByIdOrName("txtTipoControleDetalhes")).Select(tarefa.ValorControle, false);
-			document.Link(e => e.FindByIdOrName("btnSalvar")).Select(AutoSaveClick, false);
+			seleniumRWD.Set("dtcDataDate", tarefa.Data.ToString("dd/MM/yyyy"));
+			seleniumRWD.Set("txtInicioAtividade", tarefa.Inicio);
+			seleniumRWD.Set("txtFimAtividade", tarefa.Termino);
+			seleniumRWD.Set("txtDescricao", tarefa.Descricao);
+			seleniumRWD.Set("ddlTipoControle", tarefa.TipoControle);
+			seleniumRWD.Set("txtTipoControleDetalhes", tarefa.ValorControle);
+			seleniumRWD.Set("btnSalvar", AutoSaveClick);
 
-			while (document.EstaPreenchido("txtDescricao", tarefa.Descricao))
+			while (seleniumRWD.EstaPreenchido("txtDescricao", tarefa.Descricao))
 				WatiNExtension.Wait();
 
 			return true;
 		}
 
-		protected override void WaitFinish(Browser browser)
+		protected override void WaitFinish(SeleniumRWD seleniumRWD)
 		{
 			try
 			{
-				browser.Link(e => e.FindByIdOrName("Btn_Fechar")).Select(true, false);
-				while (browser.ContainsText("Soma="))
+				seleniumRWD.Set("btn_Fechar", true);
+				while (seleniumRWD.ContainsAnyText(false, "Soma="))
 					WatiNExtension.Wait();
 			}
 			catch (Exception) { }
 			finally
 			{
-				base.WaitFinish(browser);
+				base.WaitFinish(seleniumRWD);
 			}
 		}
 	}

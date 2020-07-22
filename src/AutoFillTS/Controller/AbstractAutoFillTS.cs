@@ -1,7 +1,11 @@
 ﻿using MPSC.PlenoSoft.AutoFillTS.Model;
+using MPSC.PlenoSoft.Selenium.Extension;
 using MPSC.PlenoSoft.WatiN.Extension.Util;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Remote;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using WatiN.Core;
 
 namespace MPSC.PlenoSoft.AutoFillTS.Controller
@@ -21,6 +25,18 @@ function deleteAllCookies() {
 }
 deleteAllCookies();";
 
+		private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+
+		protected CancellationToken Token
+		{
+			get
+			{
+				if (_cancellationTokenSource.Token.IsCancellationRequested)
+					_cancellationTokenSource = new CancellationTokenSource();
+				return _cancellationTokenSource.Token;
+			}
+		}
+
 		protected abstract String UrlLogin { get; }
 		protected abstract IEnumerable<String> Urls { get; }
 		protected readonly Boolean AutoSaveClick;
@@ -32,8 +48,8 @@ deleteAllCookies();";
 			AutoSaveClick = autoSaveClick;
 		}
 
-		protected abstract void EsperarPeloLogin(Document document);
-		protected abstract Boolean Fill(Document document, TimeSheet timeSheet);
+		protected abstract void EsperarPeloLogin(SeleniumRWD seleniumRWD);
+		protected abstract Boolean Fill(SeleniumRWD seleniumRWD, TimeSheet timeSheet);
 
 		public Boolean Processar(TimeSheet timeSheet)
 		{
@@ -43,26 +59,28 @@ deleteAllCookies();";
 		private Boolean OrquestrarPreenchimento(TimeSheet timeSheet)
 		{
 			var ok = true;
-			using (var browser = WatiNExtension.ObterNavegador<IE>())
+			using (var webDriver = SeleniumFactory.ChromeWebDriver())
 			{
-				browser.IrParaEndereco(UrlLogin, 1);
-				browser.RunScript(deleteAllCookies);
-				EsperarPeloLogin(browser);
+				var seleniumRWD = new SeleniumRWD(webDriver);
+				seleniumRWD.IrParaEndereco(UrlLogin, 1);
+				//webDriver.ExecuteScript(deleteAllCookies);
+				EsperarPeloLogin(seleniumRWD);
 
 				foreach (var url in Urls)
-					browser.IrParaEndereco(url, 1);
+					seleniumRWD.IrParaEndereco(url, 1);
 
-				ok = Fill(browser, timeSheet);
-				if (ok) WaitFinish(browser);
+				ok = Fill(seleniumRWD, timeSheet);
+				if (ok) WaitFinish(seleniumRWD);
 			}
 
 			return ok;
 		}
 
-		protected virtual void WaitFinish(Browser browser)
+
+		protected virtual void WaitFinish(SeleniumRWD seleniumRWD)
 		{
 			WatiNExtension.Wait();
-			try { browser.Close(); }
+			try { seleniumRWD.Encerrar(); }
 			catch (Exception) { }
 		}
 	}
