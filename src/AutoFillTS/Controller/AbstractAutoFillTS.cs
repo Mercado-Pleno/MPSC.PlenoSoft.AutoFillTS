@@ -63,7 +63,6 @@ deleteAllCookies();";
 			{
 				var seleniumRWD = new SeleniumRWD(webDriver);
 				seleniumRWD.IrParaEndereco(UrlLogin, 1);
-				//webDriver.ExecuteScript(deleteAllCookies);
 				EsperarPeloLogin(seleniumRWD);
 
 				foreach (var url in Urls)

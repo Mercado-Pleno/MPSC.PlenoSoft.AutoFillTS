@@ -10,6 +10,7 @@ namespace MPSC.PlenoSoft.Selenium.Extension
 	public class ChromeUpdateDriverVersion
 	{
 		private const string cEmptyVersion = "0000.0000.0000.0000";
+		private const string rootPath = @"..\packages\WebDriver\";
 		private const string baseURL = "https://chromedriver.storage.googleapis.com";
 
 		private ChromeUpdateDriverVersion() { }
@@ -26,10 +27,11 @@ namespace MPSC.PlenoSoft.Selenium.Extension
 				{
 					var versions = SearchDriverVersions(browserVersion.Split('.'));
 					var versaoEscolhida = ChooseBetterDriverVersion(versions);
-					var arquivoZip = DownloadDriver(versaoEscolhida, new DirectoryInfo(@"D:\Pub\"));
+					var arquivoZip = DownloadDriver(versaoEscolhida, new DirectoryInfo(rootPath));
 					var arquivoExe = Unzip(arquivoZip);
 					var webDriverLocation = SeleniumFactory.GetWebDriverLocation(arquivoExe, "ChromeDriver*.exe");
-					webDriverLocation.CopyTo(driverFile.FullName, true);
+					if ((driverFile != null) && (driverFile.Directory.FullName != webDriverLocation.Directory.FullName))
+						webDriverLocation.CopyTo(driverFile.FullName, true);
 
 					return Start();
 				}
