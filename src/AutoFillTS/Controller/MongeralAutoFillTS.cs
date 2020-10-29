@@ -46,12 +46,12 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 			seleniumRWD.Set("dtcDataDate", tarefa.Data.ToString("dd/MM/yyyy"), 150);
 			seleniumRWD.Set("txtInicioAtividade", tarefa.Inicio, 150);
 			seleniumRWD.Set("txtFimAtividade", tarefa.Termino, 150);
-			seleniumRWD.Set("txtDescricao", tarefa.Descricao, 150);
+			seleniumRWD.Set("ddlSistema", tarefa.Sistema, 150);
+			seleniumRWD.Set("ddlCategoria", tarefa.Categoria, 150);
 			seleniumRWD.Set("ddlTipoControle", tarefa.TipoControle, 150);
 			seleniumRWD.Set("txtTipoControleDetalhes", tarefa.ValorControle, 150);
-			seleniumRWD.Set("ddlSistema", tarefa.Sistema, 150);
-			seleniumRWD.Set("ddlCategoria", tarefa.Categoria, 250);
-			seleniumRWD.Set("ddlTipoAtividade", tarefa.TipoAtividade, 300);
+			seleniumRWD.Set("txtDescricao", tarefa.Descricao, 150);
+			seleniumRWD.Set("ddlTipoAtividade", tarefa.TipoAtividade, 150);
 
 			seleniumRWD.Set("btnSalvar", AutoSaveClick);
 
