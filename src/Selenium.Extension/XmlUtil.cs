@@ -42,7 +42,7 @@ namespace MPSC.PlenoSoft.Selenium.Extension
 		public static XmlNamespaceManager GetXmlNamespaceManager(XmlDocument xmlDocument)
 		{
 			var nsmgr = new XmlNamespaceManager(xmlDocument.NameTable);
-			nsmgr.AddNamespace("a", xmlDocument.DocumentElement.Attributes["xmlns"].Value);
+			nsmgr.AddNamespace("a", xmlDocument.DocumentElement?.Attributes["xmlns"]?.Value ?? ".");
 			return nsmgr;
 		}
 

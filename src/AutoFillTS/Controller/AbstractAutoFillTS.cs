@@ -59,7 +59,7 @@ deleteAllCookies();";
 		private Boolean OrquestrarPreenchimento(TimeSheet timeSheet)
 		{
 			var ok = true;
-			using (var webDriver = SeleniumFactory.ChromeWebDriver())
+			using (var webDriver = SeleniumFactory.BrowserWebDriver())
 			{
 				var seleniumRWD = new SeleniumRWD(webDriver);
 				seleniumRWD.IrParaEndereco(UrlLogin, 1);

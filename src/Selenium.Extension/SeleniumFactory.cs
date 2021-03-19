@@ -9,9 +9,27 @@ using System.Linq;
 
 namespace MPSC.PlenoSoft.Selenium.Extension
 {
+	public enum BrowserType { Chrome, Edge, FireFox, }
 
 	public static class SeleniumFactory
 	{
+		public static BrowserType BrowserType { get; set; }
+
+		public static RemoteWebDriver BrowserWebDriver(int? portaTCP = null, FileInfo webDriverLocation = null, BrowserType? browserType = null)
+		{
+			switch (browserType ?? BrowserType)
+			{
+				case BrowserType.Chrome:
+					return ChromeWebDriver(portaTCP, webDriverLocation);
+				case BrowserType.Edge:
+					return EdgeWebDriver(portaTCP, webDriverLocation);
+				case BrowserType.FireFox:
+					return FirefoxWebDriver(portaTCP, webDriverLocation);
+				default:
+					return ChromeWebDriver(portaTCP, webDriverLocation);
+			}
+		}
+
 		/// <summary>
 		/// http://learn-automation.com/install-selenium-webdriver-with-c/
 		/// https://medium.com/@carol.ciola/selenium-webdriver-com-c-artigo-1-de-4-captura-de-screenshot-9f917a43cf6f
@@ -40,15 +58,9 @@ namespace MPSC.PlenoSoft.Selenium.Extension
 			return new FirefoxDriver(driverService, driverOptions, TimeSpan.FromSeconds(30));
 		}
 
-
-		public static object GetWebDriverLocation(object fileInfo, string v)
+		public static RemoteWebDriver EdgeWebDriver(int? portaTCP = null, FileInfo webDriverLocation = null)
 		{
-			throw new NotImplementedException();
-		}
-
-		public static RemoteWebDriver EdgeWebDriver(int? portaTCP, FileInfo webDriverLocation)
-		{
-			webDriverLocation = GetWebDriverLocation(webDriverLocation, "EdgeDriver*.exe");
+			webDriverLocation = GetWebDriverLocation(webDriverLocation, "*EdgeDriver*.exe");
 			var driverService = EdgeDriverService.CreateDefaultService(webDriverLocation.Directory.FullName, webDriverLocation.Name);
 			if (portaTCP.HasValue)
 				driverService.Port = portaTCP.Value;
