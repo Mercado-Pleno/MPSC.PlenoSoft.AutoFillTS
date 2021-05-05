@@ -1,13 +1,9 @@
-﻿using MPSC.PlenoSoft.AutoFillTS.Infra;
-using MPSC.PlenoSoft.AutoFillTS.Model;
+﻿using MPSC.PlenoSoft.AutoFillTS.Model;
 using MPSC.PlenoSoft.Selenium.Extension;
-using MPSC.PlenoSoft.WatiN.Extension.Util;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Remote;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using WatiN.Core;
 
 
 namespace MPSC.PlenoSoft.AutoFillTS.Controller
@@ -32,7 +28,7 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 
 		protected override void EsperarPeloLogin(SeleniumRWD seleniumRWD)
 		{
-			WatiNExtension.Wait();
+			WaitExtension.Wait();
 			/*
 			if (webDriver.ContainsAnyText(false, "INGRESSAR", "Recuperar senha"))
 			{
@@ -43,7 +39,7 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 			}
 			*/
 			while (seleniumRWD.ContainsAnyText(false, "INGRESSAR", "Recuperar senha"))
-				WatiNExtension.Wait();
+				WaitExtension.Wait();
 		}
 
 		private static void SelecionarCompetencia(SeleniumRWD seleniumRWD, TimeSheet timeSheet)
@@ -76,19 +72,11 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 		private void GuardarEmCache(SeleniumRWD seleniumRWD)
 		{
 			while (!seleniumRWD.ContainsAllText(true,"REGISTRO DE HORAS", "COMPETÊNCIA", "HORAS NORMAIS", "HORAS EXTRAS", "SOBREAVISO"))
-				WatiNExtension.Wait();
+				WaitExtension.Wait();
 			/*
 			cacheTexts = webDriver.TextFields.Where(tf => tf.Exists).ToArray();
 			cacheCombos = webDriver.SelectLists.Where(tf => tf.Exists).ToArray();
 			*/
-		}
-
-		private static TableCell GetCell(IElementContainer container, String tipo)
-		{
-			return container.TableCells.FirstOrDefault(
-				t => t.Exists &&
-				!String.IsNullOrWhiteSpace(t.OuterText) &&
-				(t.OuterText.Trim().ToUpper() == tipo.Trim().ToUpper()));
 		}
 
 		protected override bool Fill(SeleniumRWD seleniumRWD, TimeSheet timeSheet)
@@ -148,7 +136,7 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 			catch (Exception) { }
 			finally
 			{
-				WatiNExtension.Wait(TimeSpan.FromSeconds(5));
+				WaitExtension.Wait(TimeSpan.FromSeconds(5));
 				base.WaitFinish(seleniumRWD);
 			}
 		}
@@ -171,14 +159,14 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 		{
 			button.Focus();
 			while (button.Exists() && button.Text == "SALVAR")
-				WatiNExtension.Wait();
+				WaitExtension.Wait();
 		}
 
 		private static void AguardeGravacao(IWebElement button)
 		{
-			WatiNExtension.Wait(TimeSpan.FromSeconds(1));
+			WaitExtension.Wait(TimeSpan.FromSeconds(1));
 			while (button.Exists() && button.Text != "SALVAR")
-				WatiNExtension.Wait(TimeSpan.FromSeconds(1));
+				WaitExtension.Wait(TimeSpan.FromSeconds(1));
 		}
 	}
 }
