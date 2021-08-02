@@ -13,6 +13,7 @@ namespace MPSC.PlenoSoft.AutoFillTS
 		public static void Main(String[] args)
 		{
 			var versao = ChromeUpdateDriverVersion.Update();
+			MessageBox.Show(versao);
 			Application.Run(new TSForm());
 		}
 	}

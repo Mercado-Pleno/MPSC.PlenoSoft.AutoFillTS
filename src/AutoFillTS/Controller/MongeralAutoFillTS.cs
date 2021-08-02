@@ -41,17 +41,18 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 		private Boolean PreencherPorTarefa(SeleniumRWD seleniumRWD, Tarefa tarefa)
 		{
 			WatiNExtension.Wait();
+			const int tempo = 200;
 
-			seleniumRWD.Set("ddlProjeto", tarefa.Projeto, 150);
-			seleniumRWD.Set("dtcDataDate", tarefa.Data.ToString("dd/MM/yyyy"), 150);
-			seleniumRWD.Set("txtInicioAtividade", tarefa.Inicio, 150);
-			seleniumRWD.Set("txtFimAtividade", tarefa.Termino, 150);
-			seleniumRWD.Set("ddlSistema", tarefa.Sistema, 150);
-			seleniumRWD.Set("ddlCategoria", tarefa.Categoria, 150);
-			seleniumRWD.Set("ddlTipoControle", tarefa.TipoControle, 150);
-			seleniumRWD.Set("txtTipoControleDetalhes", tarefa.ValorControle, 150);
-			seleniumRWD.Set("txtDescricao", tarefa.Descricao, 150);
-			seleniumRWD.Set("ddlTipoAtividade", tarefa.TipoAtividade, 150);
+			seleniumRWD.Set("ddlProjeto", tarefa.Projeto, tempo);
+			seleniumRWD.Set("dtcDataDate", tarefa.Data.ToString("dd/MM/yyyy"), tempo);
+			seleniumRWD.Set("txtInicioAtividade", tarefa.Inicio, tempo);
+			seleniumRWD.Set("txtFimAtividade", tarefa.Termino, tempo);
+			seleniumRWD.Set("ddlSistema", tarefa.Sistema, tempo);
+			seleniumRWD.Set("ddlCategoria", tarefa.Categoria, tempo);
+			seleniumRWD.Set("ddlTipoControle", tarefa.TipoControle, tempo);
+			seleniumRWD.Set("txtTipoControleDetalhes", tarefa.ValorControle, tempo);
+			seleniumRWD.Set("txtDescricao", tarefa.Descricao, tempo);
+			seleniumRWD.Set("ddlTipoAtividade", tarefa.TipoAtividade, tempo);
 
 			seleniumRWD.Set("btnSalvar", AutoSaveClick);
 
