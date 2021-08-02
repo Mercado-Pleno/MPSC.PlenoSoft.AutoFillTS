@@ -1,12 +1,8 @@
 ﻿using MPSC.PlenoSoft.AutoFillTS.Model;
-using MPSC.PlenoSoft.Selenium.Extension;
-using MPSC.PlenoSoft.WatiN.Extension.Util;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Remote;
+using MPSTI.PlenoSoft.Selenium.Extension;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using WatiN.Core;
 
 namespace MPSC.PlenoSoft.AutoFillTS.Controller
 {
@@ -78,7 +74,7 @@ deleteAllCookies();";
 
 		protected virtual void WaitFinish(SeleniumRWD seleniumRWD)
 		{
-			WatiNExtension.Wait();
+			WaitExtension.Wait();
 			try { seleniumRWD.Encerrar(); }
 			catch (Exception) { }
 		}

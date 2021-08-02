@@ -1,5 +1,5 @@
 ﻿using MPSC.PlenoSoft.AutoFillTS.View;
-using MPSC.PlenoSoft.Selenium.Extension;
+using MPSTI.PlenoSoft.Selenium.Extension;
 using System;
 using System.Diagnostics;
 using System.Reflection;

@@ -1,6 +1,5 @@
 ﻿using MPSC.PlenoSoft.AutoFillTS.Model;
-using MPSC.PlenoSoft.Selenium.Extension;
-using MPSC.PlenoSoft.WatiN.Extension.Util;
+using MPSTI.PlenoSoft.Selenium.Extension;
 using System;
 using System.Collections.Generic;
 
@@ -16,7 +15,7 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 		protected override void EsperarPeloLogin(SeleniumRWD seleniumRWD)
 		{
 			while (seleniumRWD.IsEmptyPageSource)
-				WatiNExtension.Wait();
+				WaitExtension.Wait();
 
 			var _ = seleniumRWD.WaitUntilContainsAllText(Token, false, "Tipo de Atividade");
 		}
@@ -40,7 +39,7 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 
 		private Boolean PreencherPorTarefa(SeleniumRWD seleniumRWD, Tarefa tarefa)
 		{
-			WatiNExtension.Wait();
+			WaitExtension.Wait();
 			const int tempo = 200;
 
 			seleniumRWD.Set("ddlProjeto", tarefa.Projeto, tempo);
@@ -57,7 +56,7 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 			seleniumRWD.Set("btnSalvar", AutoSaveClick);
 
 			while (seleniumRWD.EstaPreenchido("txtDescricao", tarefa.Descricao))
-				WatiNExtension.Wait();
+				WaitExtension.Wait();
 
 			return true;
 		}
@@ -68,7 +67,7 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 			{
 				seleniumRWD.Set("btn_Fechar", true);
 				while (seleniumRWD.ContainsAnyText(false, "Soma="))
-					WatiNExtension.Wait();
+					WaitExtension.Wait();
 			}
 			catch (Exception) { }
 			finally
