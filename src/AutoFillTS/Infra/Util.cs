@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
-using System.Windows.Forms;
 
 namespace MPSC.PlenoSoft.AutoFillTS.Infra
 {
 	public static class Util
 	{
 		private static readonly List<String> mesesPT_BR = new List<String>(new String[] { "jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez" });
-		private static readonly List<String> mesesEN_US = new List<String>(new String[] { "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "ouc", "nov", "dec" });
+		private static readonly List<String> mesesEN_US = new List<String>(new String[] { "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec" });
 		private static readonly IFormatProvider pt_BR = CultureInfo.GetCultureInfo("pt-BR");
 		private const String cFormatoHora = "hh':'mm";
 
