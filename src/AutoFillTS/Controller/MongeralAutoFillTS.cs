@@ -25,33 +25,41 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 			var ok = true;
 			foreach (var item in timeSheet.Tarefas)
 			{
-				try
-				{
-					ok = ok && PreencherPorTarefa(seleniumRWD, item);
-				}
-				catch (Exception)
-				{
-					ok = false;
-				}
+				ok = ok && Fill(seleniumRWD, item, 1);
 			}
 			return ok;
 		}
 
-		private Boolean PreencherPorTarefa(SeleniumRWD seleniumRWD, Tarefa tarefa)
+		private bool Fill(SeleniumRWD seleniumRWD, Tarefa item, int sleep)
+		{
+			try
+			{
+				return PreencherPorTarefa(seleniumRWD, item, sleep);
+			}
+			catch (Exception) when (sleep < 1000)
+			{
+				return Fill(seleniumRWD, item, sleep * 2);
+			}
+			catch (Exception)
+			{
+				return false;
+			}
+		}
+
+		private Boolean PreencherPorTarefa(SeleniumRWD seleniumRWD, Tarefa tarefa, int sleep)
 		{
 			WaitExtension.Wait();
-			const int tempo = 200;
 
-			seleniumRWD.Set("ddlProjeto", tarefa.Projeto, tempo);
-			seleniumRWD.Set("dtcDataDate", tarefa.Data.ToString("dd/MM/yyyy"), tempo);
-			seleniumRWD.Set("txtInicioAtividade", tarefa.Inicio, tempo);
-			seleniumRWD.Set("txtFimAtividade", tarefa.Termino, tempo);
-			seleniumRWD.Set("ddlSistema", tarefa.Sistema, tempo);
-			seleniumRWD.Set("ddlCategoria", tarefa.Categoria, tempo);
-			seleniumRWD.Set("ddlTipoControle", tarefa.TipoControle, tempo);
-			seleniumRWD.Set("txtTipoControleDetalhes", tarefa.ValorControle, tempo);
-			seleniumRWD.Set("txtDescricao", tarefa.Descricao, tempo);
-			seleniumRWD.Set("ddlTipoAtividade", tarefa.TipoAtividade, tempo);
+			seleniumRWD.Set("ddlProjeto", tarefa.Projeto, sleep);
+			seleniumRWD.Set("ddlSistema", tarefa.Sistema, sleep);
+			seleniumRWD.Set("ddlCategoria", tarefa.Categoria, sleep);
+			seleniumRWD.Set("ddlTipoAtividade", tarefa.TipoAtividade, sleep);
+			seleniumRWD.Set("dtcDataDate", tarefa.Data.ToString("dd/MM/yyyy"), sleep);
+			seleniumRWD.Set("txtInicioAtividade", tarefa.Inicio, sleep);
+			seleniumRWD.Set("txtFimAtividade", tarefa.Termino, sleep);
+			seleniumRWD.Set("txtDescricao", tarefa.Descricao, sleep);
+			seleniumRWD.Set("ddlTipoControle", tarefa.TipoControle, sleep);
+			seleniumRWD.Set("txtTipoControleDetalhes", tarefa.ValorControle, sleep);
 
 			seleniumRWD.Set("btnSalvar", AutoSaveClick);
 
