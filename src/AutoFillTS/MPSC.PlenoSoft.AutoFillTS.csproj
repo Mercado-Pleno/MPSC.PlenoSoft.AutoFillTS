@@ -63,8 +63,8 @@
     <Reference Include="HtmlAgilityPack, Version=1.11.33.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.11.33\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
-    <Reference Include="MPSTI.PlenoSoft.Selenium.Extension, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MPSTI.PlenoSoft.Selenium.Extension.1.0.0.2\lib\net\MPSTI.PlenoSoft.Selenium.Extension.dll</HintPath>
+    <Reference Include="MPSTI.PlenoSoft.Selenium.Extension, Version=1.0.0.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MPSTI.PlenoSoft.Selenium.Extension.1.0.0.6\lib\net\MPSTI.PlenoSoft.Selenium.Extension.dll</HintPath>
     </Reference>
     <Reference Include="Selenium.WebDriverBackedSelenium, Version=3.141.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Selenium.WebDriverBackedSelenium.3.141.0\lib\net45\Selenium.WebDriverBackedSelenium.dll</HintPath>
