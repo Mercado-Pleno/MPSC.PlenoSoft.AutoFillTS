@@ -26,9 +26,10 @@ namespace MPSC.PlenoSoft.AutoFillTS.View
 		{
 			try
 			{
+				txtHorarios.Text = txtHorarios.Text.Replace("\r", "").Replace("\n", "\r\n");
 				var timeSheet = TimeSheetFactory.Load(txtHorarios.Text);
-				dgvHorarios.DataSource = (timeSheet == null) ? null : timeSheet.Tarefas;
-				lblStatusBar.Text = $"Ok às {DateTime.Now.ToString("dd/MM/yy HH:mm:ss")}";
+				dgvHorarios.DataSource = timeSheet?.Tarefas;
+				lblStatusBar.Text = $"Ok às {DateTime.Now.ToString("dd/MM/yy HH:mm:ss")} - {timeSheet?.Tarefas?.Count()}";
 			}
 			catch (Exception exception)
 			{

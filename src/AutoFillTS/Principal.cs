@@ -12,7 +12,7 @@ namespace MPSC.PlenoSoft.AutoFillTS
 		[STAThread]
 		public static void Main(String[] args)
 		{
-			var versao = ChromeUpdateDriverVersion.Update();
+			var versao = EdgeUpdateDriverVersion.Update();
 			MessageBox.Show(versao);
 			Application.Run(new TSForm());
 		}

@@ -64,7 +64,10 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 			seleniumRWD.Set("btnSalvar", AutoSaveClick);
 
 			while (seleniumRWD.EstaPreenchido("txtDescricao", tarefa.Descricao))
+			{ 
 				WaitExtension.Wait();
+				seleniumRWD.Set("btnSalvar", AutoSaveClick);
+			}
 
 			return true;
 		}
