@@ -2,6 +2,7 @@
 using MPSTI.PlenoSoft.Selenium.Extension;
 using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace MPSC.PlenoSoft.AutoFillTS.Controller
 {
@@ -49,6 +50,7 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 		private Boolean PreencherPorTarefa(SeleniumRWD seleniumRWD, Tarefa tarefa, int sleep)
 		{
 			WaitExtension.Wait();
+			Application.DoEvents();
 
 			seleniumRWD.Set("ddlProjeto", tarefa.Projeto, sleep);
 			seleniumRWD.Set("ddlSistema", tarefa.Sistema, sleep);
@@ -66,6 +68,7 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 			while (seleniumRWD.EstaPreenchido("txtDescricao", tarefa.Descricao))
 			{ 
 				WaitExtension.Wait();
+				Application.DoEvents();
 				seleniumRWD.Set("btnSalvar", AutoSaveClick);
 			}
 
