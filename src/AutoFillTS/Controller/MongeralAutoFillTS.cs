@@ -2,6 +2,7 @@
 using MPSTI.PlenoSoft.Core.Selenium;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace MPSC.PlenoSoft.AutoFillTS.Controller
@@ -24,22 +25,24 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 		protected override bool Fill(SeleniumDriver seleniumDriver, TimeSheet timeSheet)
 		{
 			var ok = true;
+
 			foreach (var item in timeSheet.Tarefas)
-			{
-				ok = ok && Fill(seleniumDriver, item, 1);
-			}
+				ok = ok && Fill(seleniumDriver, item);
+
 			return ok;
 		}
 
-		private bool Fill(SeleniumDriver seleniumDriver, Tarefa item, int sleep)
+		private bool Fill(SeleniumDriver seleniumDriver, Tarefa item, int loop = 0)
 		{
 			try
 			{
-				return PreencherPorTarefa(seleniumDriver, item, TimeSpan.FromMilliseconds(sleep));
+				Application.DoEvents();
+				return PreencherPorTarefa(seleniumDriver, item);
 			}
-			catch (Exception) when (sleep < 1000)
+			catch when (loop < 5)
 			{
-				return Fill(seleniumDriver, item, sleep * 2);
+				seleniumDriver.Wait(wait);
+				return Fill(seleniumDriver, item, loop + 1);
 			}
 			catch (Exception)
 			{
@@ -47,28 +50,39 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 			}
 		}
 
-		private Boolean PreencherPorTarefa(SeleniumDriver seleniumDriver, Tarefa tarefa, TimeSpan sleep)
+
+		private void TryCore(DateTime limitTime, Action action)
 		{
-			seleniumDriver.Wait(sleep);
-			Application.DoEvents();
-
-			seleniumDriver.Wait(sleep).Set("ddlProjeto", tarefa.Projeto);
-			seleniumDriver.Wait(sleep).Set("ddlSistema", tarefa.Sistema);
-			seleniumDriver.Wait(sleep).Set("ddlCategoria", tarefa.Categoria);
-			seleniumDriver.Wait(sleep).Set("ddlTipoAtividade", tarefa.TipoAtividade);
-			seleniumDriver.Wait(sleep).Set("dtcDataDate", tarefa.Data.ToString("dd/MM/yyyy"));
-			seleniumDriver.Wait(sleep).Set("txtInicioAtividade", tarefa.Inicio);
-			seleniumDriver.Wait(sleep).Set("txtFimAtividade", tarefa.Termino);
-			seleniumDriver.Wait(sleep).Set("txtDescricao", tarefa.Descricao);
-			seleniumDriver.Wait(sleep).Set("ddlTipoControle", tarefa.TipoControle);
-			seleniumDriver.Wait(sleep).Set("txtTipoControleDetalhes", tarefa.ValorControle);
-			seleniumDriver.Wait(sleep).Set("btnSalvar", AutoSaveClick);
-
-			while (seleniumDriver.IsEquals("txtDescricao", tarefa.Descricao))
+			try
 			{
-				seleniumDriver.Wait(wait);
+				action.Invoke();
+			}
+			catch when (DateTime.UtcNow < limitTime)
+			{
+				Thread.Sleep(wait);
+				TryCore(limitTime, action);
+			}
+		}
+
+		private void Try(TimeSpan timeOut, Action action) => TryCore(DateTime.UtcNow.Add(timeOut), action);
+
+		private Boolean PreencherPorTarefa(SeleniumDriver seleniumDriver, Tarefa tarefa)
+		{
+			Try(tryTimeOut, () => seleniumDriver.Set("ddlCategoria", tarefa.Categoria));
+			Try(tryTimeOut, () => seleniumDriver.Set("ddlProjeto", tarefa.Projeto));
+			Try(tryTimeOut, () => seleniumDriver.Set("ddlSistema", tarefa.Sistema));
+			Try(tryTimeOut, () => seleniumDriver.Set("ddlTipoAtividade", tarefa.TipoAtividade));
+			Try(tryTimeOut, () => seleniumDriver.Set("dtcDataDate", tarefa.Data.ToString("dd/MM/yyyy")));
+			Try(tryTimeOut, () => seleniumDriver.Set("txtInicioAtividade", tarefa.Inicio));
+			Try(tryTimeOut, () => seleniumDriver.Set("txtFimAtividade", tarefa.Termino));
+			Try(tryTimeOut, () => seleniumDriver.Set("txtDescricao", tarefa.Descricao));
+			Try(tryTimeOut, () => seleniumDriver.Set("ddlTipoControle", tarefa.TipoControle));
+			Try(tryTimeOut, () => seleniumDriver.Set("txtTipoControleDetalhes", tarefa.ValorControle));
+			Try(tryTimeOut, () => seleniumDriver.Set("btnSalvar", AutoSaveClick));
+
+			while (seleniumDriver.Wait(wait).IsEquals("txtDescricao", tarefa.Descricao))
+			{
 				Application.DoEvents();
-				seleniumDriver.Set("btnSalvar", AutoSaveClick);
 			}
 
 			return true;

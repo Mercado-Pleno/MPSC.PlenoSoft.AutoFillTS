@@ -9,7 +9,8 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 {
 	public abstract class AbstractAutoFillTS
 	{
-		protected TimeSpan wait = TimeSpan.FromMilliseconds(100);
+		protected readonly TimeSpan tryTimeOut = TimeSpan.FromSeconds(2);
+		protected readonly TimeSpan wait = TimeSpan.FromMilliseconds(99);
 
 		private const String deleteAllCookies = @"
 function deleteAllCookies() {
