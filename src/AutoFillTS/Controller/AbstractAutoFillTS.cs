@@ -1,5 +1,5 @@
 ﻿using MPSC.PlenoSoft.AutoFillTS.Model;
-using MPSTI.PlenoSoft.Selenium.Extension;
+using MPSTI.PlenoSoft.Core.Selenium;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -8,6 +8,8 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 {
 	public abstract class AbstractAutoFillTS
 	{
+		protected TimeSpan wait = TimeSpan.FromMilliseconds(100);
+
 		private const String deleteAllCookies = @"
 function deleteAllCookies() {
     var cookies = document.cookie.split("";"");
@@ -38,14 +40,14 @@ deleteAllCookies();";
 		protected readonly Boolean AutoSaveClick;
 		private readonly Boolean IgnoraProcessamento;
 
-		public AbstractAutoFillTS(Boolean vaiProcessar, Boolean autoSaveClick)
+		protected AbstractAutoFillTS(Boolean vaiProcessar, Boolean autoSaveClick)
 		{
 			IgnoraProcessamento = !vaiProcessar;
 			AutoSaveClick = autoSaveClick;
 		}
 
-		protected abstract void EsperarPeloLogin(SeleniumRWD seleniumRWD);
-		protected abstract Boolean Fill(SeleniumRWD seleniumRWD, TimeSheet timeSheet);
+		protected abstract void EsperarPeloLogin(SeleniumWd seleniumWd);
+		protected abstract Boolean Fill(SeleniumWd seleniumWd, TimeSheet timeSheet);
 
 		public Boolean Processar(TimeSheet timeSheet)
 		{
@@ -57,26 +59,25 @@ deleteAllCookies();";
 			var ok = true;
 			using (var webDriver = SeleniumFactory.BrowserWebDriver())
 			{
-				var seleniumRWD = new SeleniumRWD(webDriver);
-				seleniumRWD.IrParaEndereco(UrlLogin, 1);
-				EsperarPeloLogin(seleniumRWD);
+				var seleniumWd = new SeleniumWd(webDriver);
+				seleniumWd.GoTo(UrlLogin);
+				EsperarPeloLogin(seleniumWd);
 
 				foreach (var url in Urls)
-					seleniumRWD.IrParaEndereco(url, 1);
+					seleniumWd.GoTo(url);
 
-				ok = Fill(seleniumRWD, timeSheet);
-				if (ok) WaitFinish(seleniumRWD);
+				ok = Fill(seleniumWd, timeSheet);
+				if (ok) WaitFinish(seleniumWd);
 			}
 
 			return ok;
 		}
 
 
-		protected virtual void WaitFinish(SeleniumRWD seleniumRWD)
+		protected virtual void WaitFinish(SeleniumWd seleniumWd)
 		{
-			WaitExtension.Wait();
-			try { seleniumRWD.Encerrar(); }
-			catch (Exception) { }
+			seleniumWd.Wait(wait);
+			seleniumWd.CloseAndDispose();
 		}
 	}
 }

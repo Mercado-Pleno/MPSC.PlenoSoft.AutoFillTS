@@ -1,16 +1,19 @@
-﻿using MPSC.PlenoSoft.AutoFillTS.Model;
-using MPSTI.PlenoSoft.Selenium.Extension;
+﻿using MPSC.PlenoSoft.AutoFillTS.Infra;
+using MPSC.PlenoSoft.AutoFillTS.Model;
+using MPSTI.PlenoSoft.Core.Selenium;
+using MPSTI.PlenoSoft.Core.Selenium.Extensions;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 
 namespace MPSC.PlenoSoft.AutoFillTS.Controller
 {
 	public class ProviderItAutoFillTS : AbstractAutoFillTS
 	{
-		//private TextField[] cacheTexts;
-		//private SelectList[] cacheCombos;
+		private IWebElement[] cacheTexts;
+		private IWebElement[] cacheCombos;
 		protected override String UrlLogin { get { return "http://186.215.208.203/intranet/login/login.asp"; } }
 		protected override IEnumerable<String> Urls
 		{
@@ -25,147 +28,144 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 
 		public ProviderItAutoFillTS(Boolean processar, Boolean autoSaveClick) : base(processar, autoSaveClick) { }
 
-		protected override void EsperarPeloLogin(SeleniumRWD seleniumRWD)
+		protected override void EsperarPeloLogin(SeleniumWd seleniumWd)
 		{
-			WaitExtension.Wait();
-			/*
-			if (webDriver.ContainsAnyText(false, "INGRESSAR", "Recuperar senha"))
+			seleniumWd.Wait(wait);
+			if (seleniumWd.ContainsAnyText(false, "INGRESSAR", "Recuperar senha"))
 			{
-				var userOk = !String.IsNullOrWhiteSpace(webDriver.TextField(e => e.FindByIdOrName("USUARIO")).Text);
-				var passOk = !String.IsNullOrWhiteSpace(webDriver.TextField(e => e.FindByIdOrName("SENHA")).Text);
+				var userOk = !String.IsNullOrWhiteSpace(seleniumWd.GetByIdOrName("USUARIO").Text);
+				var passOk = !String.IsNullOrWhiteSpace(seleniumWd.GetByIdOrName("SENHA").Text);
 				if (userOk || passOk)
-					webDriver.GetButton(e => e.FindByIdOrName("COMANDO")).Click();
+					seleniumWd.GetButton("COMANDO").Click();
 			}
-			*/
-			while (seleniumRWD.ContainsAnyText(false, "INGRESSAR", "Recuperar senha"))
-				WaitExtension.Wait();
+			while (seleniumWd.ContainsAnyText(false, "INGRESSAR", "Recuperar senha"))
+				seleniumWd.Wait(wait);
 		}
 
-		private static void SelecionarCompetencia(SeleniumRWD seleniumRWD, TimeSheet timeSheet)
+		private static void SelecionarCompetencia(SeleniumWd seleniumWd, TimeSheet timeSheet)
 		{
-			/*
-			var comboCompetencia = webDriver.SelectList(e => e.FindByIdOrName("ANOMES_TELA"));
+			var comboCompetencia = seleniumWd.GetSelect("ANOMES_TELA");
 			var data = timeSheet.TarefasDiarias.Min(t => t.Data);
 			var competencia = data.Year * 100 + data.Month;
-			if (comboCompetencia.GetAttributeValue("value") != competencia.ToString())
-				comboCompetencia.Select(competencia, true);
-			*/
+
+			if (comboCompetencia.WrappedElement.GetAttribute("value") != competencia.ToString())
+				comboCompetencia.SetSelect(competencia.ToString());
 		}
 
-		private static void SelecionarTipoHora(SeleniumRWD seleniumRWD, string tipo)
+		private static void SelecionarTipoHora(SeleniumWd seleniumWd, string tipo)
 		{
-			/*
-			var form = webDriver.Form(e => e.FindByIdOrName("frmCadDoc"));
-			var txt = form.TextField(e => e.FindByIdOrName("TIPO_HORA"));
-			var tipohora = $"tipoHora('{txt.Value}')";
+			var form = seleniumWd.GetElementsByTagName("form").First(e => e.FindByIdOrName("frmCadDoc"));
+			var txt = form.GetElementsByTagName("input").First(e => e.FindByIdOrName("TIPO_HORA"));
+			var tipohora = $"tipoHora('{txt.Text}')";
 
 			var cell = GetCell(form, tipo);
 			while (GetCell(cell, tipo) != null)
 				cell = GetCell(cell, tipo);
 
-			if (!cell.OuterHtml.Contains(tipohora))
+			if (!cell.Text.Contains(tipohora))
 				cell.Click();
-			*/
 		}
 
-		private void GuardarEmCache(SeleniumRWD seleniumRWD)
+		private static IWebElement GetCell(ISearchContext container, String tipo)
 		{
-			while (!seleniumRWD.ContainsAllText(true,"REGISTRO DE HORAS", "COMPETÊNCIA", "HORAS NORMAIS", "HORAS EXTRAS", "SOBREAVISO"))
-				WaitExtension.Wait();
-			/*
-			cacheTexts = webDriver.TextFields.Where(tf => tf.Exists).ToArray();
-			cacheCombos = webDriver.SelectLists.Where(tf => tf.Exists).ToArray();
-			*/
+			return container.FindElements(By.CssSelector("*"))
+				.First(t => t.IsAlive()
+					&& !String.IsNullOrWhiteSpace(t.Text)
+					&& (t.Text.Trim().ToUpper() == tipo.Trim().ToUpper())
+			);
 		}
 
-		protected override bool Fill(SeleniumRWD seleniumRWD, TimeSheet timeSheet)
+		private void GuardarEmCache(SeleniumWd seleniumWd)
 		{
-			SelecionarCompetencia(seleniumRWD, timeSheet);
-			SelecionarTipoHora(seleniumRWD, "HORAS NORMAIS");
-			GuardarEmCache(seleniumRWD);
+			while (!seleniumWd.ContainsAllText(true, "REGISTRO DE HORAS", "COMPETÊNCIA", "HORAS NORMAIS", "HORAS EXTRAS", "SOBREAVISO"))
+				seleniumWd.Wait(wait);
+
+			cacheTexts = seleniumWd.GetElementsByTagName("input").Where(tf => tf.IsAlive()).ToArray();
+			cacheCombos = seleniumWd.GetElementsByTagName("Select").Where(tf => tf.IsAlive()).ToArray();
+		}
+
+		protected override bool Fill(SeleniumWd seleniumWd, TimeSheet timeSheet)
+		{
+			SelecionarCompetencia(seleniumWd, timeSheet);
+			SelecionarTipoHora(seleniumWd, "HORAS NORMAIS");
+			GuardarEmCache(seleniumWd);
 			foreach (var item in timeSheet.TarefasDiarias)
-				PreencherHorasNormais(seleniumRWD, item);
+				PreencherHorasNormais(seleniumWd, item);
 
-			if (Salvar(seleniumRWD))
+			if (Salvar(seleniumWd))
 			{
-				SelecionarTipoHora(seleniumRWD, "HORAS EXTRAS");
-				GuardarEmCache(seleniumRWD);
+				SelecionarTipoHora(seleniumWd, "HORAS EXTRAS");
+				GuardarEmCache(seleniumWd);
 				foreach (var item in timeSheet.TarefasDiarias)
-					PreencherHorasExtas(seleniumRWD, item);
+					PreencherHorasExtas(seleniumWd, item);
 			}
 			return true;
 		}
 
-		private Boolean PreencherHorasNormais(SeleniumRWD seleniumRWD, TarefaDiaria tarefaDiaria)
-		{/*
+		private void PreencherHorasNormais(SeleniumWd seleniumWd, TarefaDiaria tarefaDiaria)
+		{
 			var sufixo = String.Format("_{0}_{1}", tarefaDiaria.Data.ToString("yyyyMMdd"), "1");
-
-			cacheCombos.FirstOrDefault(e => e.FindByIdOrName("ID_PROJETO" + sufixo)).Select(51432, false);
-			cacheTexts.FirstOrDefault(e => e.FindByIdOrName("hora_ini" + sufixo)).Select(tarefaDiaria.Inicio.ToHora(), false);
-			cacheTexts.FirstOrDefault(e => e.FindByIdOrName("hora_fim" + sufixo)).Select(tarefaDiaria.TerminoHorasComuns.ToHora(), false);
-			cacheTexts.FirstOrDefault(e => e.FindByIdOrName("intervalo" + sufixo)).Select(tarefaDiaria.Intervalo.ToHora(), false)?.Focus();
-			cacheTexts.FirstOrDefault(e => e.FindByIdOrName("DESCRICAO" + sufixo)).Select(tarefaDiaria.Descricao, false);
-			*/
-			return true;
+			cacheCombos.FirstOrDefault(e => e.FindByIdOrName("ID_PROJETO" + sufixo)).SetSelect("51432");
+			cacheTexts.FirstOrDefault(e => e.FindByIdOrName("hora_ini" + sufixo)).SetInput(tarefaDiaria.Inicio.ToHora());
+			cacheTexts.FirstOrDefault(e => e.FindByIdOrName("hora_fim" + sufixo)).SetInput(tarefaDiaria.TerminoHorasComuns.ToHora());
+			cacheTexts.FirstOrDefault(e => e.FindByIdOrName("intervalo" + sufixo)).SetInput(tarefaDiaria.Intervalo.ToHora()).SetFocus();
+			cacheTexts.FirstOrDefault(e => e.FindByIdOrName("DESCRICAO" + sufixo)).SetInput(tarefaDiaria.Descricao);
+			seleniumWd.Wait(wait);
 		}
 
-		private Boolean PreencherHorasExtas(SeleniumRWD seleniumRWD, TarefaDiaria tarefaDiaria)
+		private void PreencherHorasExtas(SeleniumWd seleniumWd, TarefaDiaria tarefaDiaria)
 		{
-			/*
 			if (tarefaDiaria.HorasExtras > TimeSpan.Zero)
 			{
 				var sufixo = String.Format("_{0}_{1}", tarefaDiaria.Data.ToString("yyyyMMdd"), "1");
 
-				cacheCombos.FirstOrDefault(e => e.FindByIdOrName("ID_PROJETO" + sufixo)).Select(51432, false);
-				cacheTexts.FirstOrDefault(e => e.FindByIdOrName("hora_ini" + sufixo)).Select(tarefaDiaria.TerminoHorasComuns.ToHora(), false);
-				cacheTexts.FirstOrDefault(e => e.FindByIdOrName("hora_fim" + sufixo)).Select(tarefaDiaria.Termino.ToHora(), false);
-				cacheTexts.FirstOrDefault(e => e.FindByIdOrName("intervalo" + sufixo)).Select(TimeSpan.Zero.ToHora(), false).Focus();
-				cacheTexts.FirstOrDefault(e => e.FindByIdOrName("DESCRICAO" + sufixo)).Select(tarefaDiaria.Descricao, false);
+				cacheCombos.FirstOrDefault(e => e.FindByIdOrName("ID_PROJETO" + sufixo)).SetSelect("51432");
+				cacheTexts.FirstOrDefault(e => e.FindByIdOrName("hora_ini" + sufixo)).SetInput(tarefaDiaria.TerminoHorasComuns.ToHora());
+				cacheTexts.FirstOrDefault(e => e.FindByIdOrName("hora_fim" + sufixo)).SetInput(tarefaDiaria.Termino.ToHora());
+				cacheTexts.FirstOrDefault(e => e.FindByIdOrName("intervalo" + sufixo)).SetInput(TimeSpan.Zero.ToHora()).SetFocus();
+				cacheTexts.FirstOrDefault(e => e.FindByIdOrName("DESCRICAO" + sufixo)).SetInput(tarefaDiaria.Descricao);
+				seleniumWd.Wait(wait);
 			}
-			*/
-			return true;
 		}
 
-		protected override void WaitFinish(SeleniumRWD seleniumRWD)
+		protected override void WaitFinish(SeleniumWd seleniumWd)
 		{
 			try
 			{
-				Salvar(seleniumRWD);
+				Salvar(seleniumWd);
 			}
-			catch (Exception) { }
 			finally
 			{
-				WaitExtension.Wait(TimeSpan.FromSeconds(5));
-				base.WaitFinish(seleniumRWD);
+				seleniumWd.Wait(TimeSpan.FromSeconds(5));
+				base.WaitFinish(seleniumWd);
 			}
 		}
 
-		private Boolean Salvar(SeleniumRWD seleniumRWD)
+		private Boolean Salvar(SeleniumWd seleniumWd)
 		{
-			/*
-			var button = webDriver.GetButton(e => e.FindByIdOrName("COMANDO_SALVAR_TOP"));
+			var button = seleniumWd.GetButton("COMANDO_SALVAR_TOP");
 			if (AutoSaveClick)
 				button.Click();
 			else
-				AguardeUsuarioGravar(button);
+				AguardeUsuarioGravar(seleniumWd, button);
 
-			AguardeGravacao(button);
-			*/
+			AguardeGravacao(seleniumWd, button);
+
 			return true;
 		}
 
-		private void AguardeUsuarioGravar(IWebElement button)
+		private void AguardeUsuarioGravar(SeleniumWd seleniumWd, IWebElement button)
 		{
-			button.Focus();
-			while (button.Exists() && button.Text == "SALVAR")
-				WaitExtension.Wait();
+			button.SetFocus();
+			while (button.IsAlive() && button.Text == "SALVAR")
+				seleniumWd.Wait(wait);
 		}
 
-		private static void AguardeGravacao(IWebElement button)
+		private static void AguardeGravacao(SeleniumWd seleniumWd, IWebElement button)
 		{
-			WaitExtension.Wait(TimeSpan.FromSeconds(1));
-			while (button.Exists() && button.Text != "SALVAR")
-				WaitExtension.Wait(TimeSpan.FromSeconds(1));
+			seleniumWd.Wait(TimeSpan.FromSeconds(1));
+			while (button.IsAlive() && button.Text != "SALVAR")
+				seleniumWd.Wait(TimeSpan.FromSeconds(1));
 		}
 	}
 }
