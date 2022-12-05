@@ -1,5 +1,6 @@
 ﻿using MPSC.PlenoSoft.AutoFillTS.Model;
 using MPSTI.PlenoSoft.Core.Selenium;
+using MPSTI.PlenoSoft.Core.Selenium.Factories;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -46,8 +47,8 @@ deleteAllCookies();";
 			AutoSaveClick = autoSaveClick;
 		}
 
-		protected abstract void EsperarPeloLogin(SeleniumWd seleniumWd);
-		protected abstract Boolean Fill(SeleniumWd seleniumWd, TimeSheet timeSheet);
+		protected abstract void EsperarPeloLogin(SeleniumDriver seleniumDriver);
+		protected abstract Boolean Fill(SeleniumDriver seleniumDriver, TimeSheet timeSheet);
 
 		public Boolean Processar(TimeSheet timeSheet)
 		{
@@ -59,25 +60,25 @@ deleteAllCookies();";
 			var ok = true;
 			using (var webDriver = SeleniumFactory.BrowserWebDriver())
 			{
-				var seleniumWd = new SeleniumWd(webDriver);
-				seleniumWd.GoTo(UrlLogin);
-				EsperarPeloLogin(seleniumWd);
+				var seleniumDriver = new SeleniumDriver(webDriver);
+				seleniumDriver.GoTo(UrlLogin);
+				EsperarPeloLogin(seleniumDriver);
 
 				foreach (var url in Urls)
-					seleniumWd.GoTo(url);
+					seleniumDriver.GoTo(url);
 
-				ok = Fill(seleniumWd, timeSheet);
-				if (ok) WaitFinish(seleniumWd);
+				ok = Fill(seleniumDriver, timeSheet);
+				if (ok) WaitFinish(seleniumDriver);
 			}
 
 			return ok;
 		}
 
 
-		protected virtual void WaitFinish(SeleniumWd seleniumWd)
+		protected virtual void WaitFinish(SeleniumDriver seleniumDriver)
 		{
-			seleniumWd.Wait(wait);
-			seleniumWd.CloseAndDispose();
+			seleniumDriver.Wait(wait);
+			seleniumDriver.CloseAndDispose();
 		}
 	}
 }

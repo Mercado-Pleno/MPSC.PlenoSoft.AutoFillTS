@@ -13,33 +13,33 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 
 		public MongeralAutoFillTS(Boolean processar, Boolean autoSaveClick) : base(processar, autoSaveClick) { }
 
-		protected override void EsperarPeloLogin(SeleniumWd seleniumWd)
+		protected override void EsperarPeloLogin(SeleniumDriver seleniumDriver)
 		{
-			while (seleniumWd.IsEmptyPageSource)
-				seleniumWd.Wait(wait);
+			while (seleniumDriver.IsEmptyPageSource)
+				seleniumDriver.Wait(wait);
 
-			_ = seleniumWd.WaitUntilContainsAllText(Token, false, "Tipo de Atividade");
+			_ = seleniumDriver.WaitUntilContainsAllText(Token, false, "Tipo de Atividade");
 		}
 
-		protected override bool Fill(SeleniumWd seleniumWd, TimeSheet timeSheet)
+		protected override bool Fill(SeleniumDriver seleniumDriver, TimeSheet timeSheet)
 		{
 			var ok = true;
 			foreach (var item in timeSheet.Tarefas)
 			{
-				ok = ok && Fill(seleniumWd, item, 1);
+				ok = ok && Fill(seleniumDriver, item, 1);
 			}
 			return ok;
 		}
 
-		private bool Fill(SeleniumWd seleniumWd, Tarefa item, int sleep)
+		private bool Fill(SeleniumDriver seleniumDriver, Tarefa item, int sleep)
 		{
 			try
 			{
-				return PreencherPorTarefa(seleniumWd, item, TimeSpan.FromMilliseconds(sleep));
+				return PreencherPorTarefa(seleniumDriver, item, TimeSpan.FromMilliseconds(sleep));
 			}
 			catch (Exception) when (sleep < 1000)
 			{
-				return Fill(seleniumWd, item, sleep * 2);
+				return Fill(seleniumDriver, item, sleep * 2);
 			}
 			catch (Exception)
 			{
@@ -47,44 +47,44 @@ namespace MPSC.PlenoSoft.AutoFillTS.Controller
 			}
 		}
 
-		private Boolean PreencherPorTarefa(SeleniumWd seleniumWd, Tarefa tarefa, TimeSpan sleep)
+		private Boolean PreencherPorTarefa(SeleniumDriver seleniumDriver, Tarefa tarefa, TimeSpan sleep)
 		{
-			seleniumWd.Wait(sleep);
+			seleniumDriver.Wait(sleep);
 			Application.DoEvents();
 
-			seleniumWd.Wait(sleep).Set("ddlProjeto", tarefa.Projeto);
-			seleniumWd.Wait(sleep).Set("ddlSistema", tarefa.Sistema);
-			seleniumWd.Wait(sleep).Set("ddlCategoria", tarefa.Categoria);
-			seleniumWd.Wait(sleep).Set("ddlTipoAtividade", tarefa.TipoAtividade);
-			seleniumWd.Wait(sleep).Set("dtcDataDate", tarefa.Data.ToString("dd/MM/yyyy"));
-			seleniumWd.Wait(sleep).Set("txtInicioAtividade", tarefa.Inicio);
-			seleniumWd.Wait(sleep).Set("txtFimAtividade", tarefa.Termino);
-			seleniumWd.Wait(sleep).Set("txtDescricao", tarefa.Descricao);
-			seleniumWd.Wait(sleep).Set("ddlTipoControle", tarefa.TipoControle);
-			seleniumWd.Wait(sleep).Set("txtTipoControleDetalhes", tarefa.ValorControle);
-			seleniumWd.Wait(sleep).Set("btnSalvar", AutoSaveClick);
+			seleniumDriver.Wait(sleep).Set("ddlProjeto", tarefa.Projeto);
+			seleniumDriver.Wait(sleep).Set("ddlSistema", tarefa.Sistema);
+			seleniumDriver.Wait(sleep).Set("ddlCategoria", tarefa.Categoria);
+			seleniumDriver.Wait(sleep).Set("ddlTipoAtividade", tarefa.TipoAtividade);
+			seleniumDriver.Wait(sleep).Set("dtcDataDate", tarefa.Data.ToString("dd/MM/yyyy"));
+			seleniumDriver.Wait(sleep).Set("txtInicioAtividade", tarefa.Inicio);
+			seleniumDriver.Wait(sleep).Set("txtFimAtividade", tarefa.Termino);
+			seleniumDriver.Wait(sleep).Set("txtDescricao", tarefa.Descricao);
+			seleniumDriver.Wait(sleep).Set("ddlTipoControle", tarefa.TipoControle);
+			seleniumDriver.Wait(sleep).Set("txtTipoControleDetalhes", tarefa.ValorControle);
+			seleniumDriver.Wait(sleep).Set("btnSalvar", AutoSaveClick);
 
-			while (seleniumWd.TextIsEquals("txtDescricao", tarefa.Descricao))
+			while (seleniumDriver.IsEquals("txtDescricao", tarefa.Descricao))
 			{
-				seleniumWd.Wait(sleep);
+				seleniumDriver.Wait(wait);
 				Application.DoEvents();
-				seleniumWd.Set("btnSalvar", AutoSaveClick);
+				seleniumDriver.Set("btnSalvar", AutoSaveClick);
 			}
 
 			return true;
 		}
 
-		protected override void WaitFinish(SeleniumWd seleniumWd)
+		protected override void WaitFinish(SeleniumDriver seleniumDriver)
 		{
 			try
 			{
-				seleniumWd.Set("btn_Fechar", true);
-				while (seleniumWd.ContainsAnyText(false, "Soma="))
-					seleniumWd.Wait(wait);
+				seleniumDriver.Set("btn_Fechar", true);
+				while (seleniumDriver.ContainsAnyText(false, "Soma="))
+					seleniumDriver.Wait(wait);
 			}
 			finally
 			{
-				base.WaitFinish(seleniumWd);
+				base.WaitFinish(seleniumDriver);
 			}
 		}
 	}

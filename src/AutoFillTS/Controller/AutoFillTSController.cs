@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace MPSC.PlenoSoft.AutoFillTS.Controller
 {
-	public class AutoFillTSController
+	public static class AutoFillTSController
 	{
 		public static Boolean Processar(IEnumerable<AbstractAutoFillTS> listaAutoFillTS, TimeSheet timeSheet)
 		{
