@@ -9,11 +9,14 @@ namespace MPSC.PlenoSoft.AutoFillTS
 {
 	public static class Principal
 	{
+		private static readonly string[] browserFileLocations = new[] { @"C:\Program Files\", @"C:\Program Files (x86)\" };
+
 		[STAThread]
 		public static void Main(String[] args)
 		{
-			var updateInfo = ChromeUpdateDriverVersion.Update(@"C:\Program Files\", @"C:\Program Files (x86)\");
-			MessageBox.Show(updateInfo.Message);
+			var updateInfo1 = EdgeUpdateDriverVersion.Update(browserFileLocations);
+			var updateInfo2 = ChromeUpdateDriverVersion.Update(browserFileLocations);
+			MessageBox.Show($"{updateInfo1?.Message}\r\n\r\n{updateInfo2?.Message}");
 			Application.Run(new TSForm());
 		}
 	}
