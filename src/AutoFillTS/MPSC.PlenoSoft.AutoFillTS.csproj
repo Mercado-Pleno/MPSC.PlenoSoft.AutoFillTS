@@ -65,8 +65,8 @@
     <Reference Include="HtmlAgilityPack, Version=1.11.46.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.11.46\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
-    <Reference Include="MPSTI.PlenoSoft.Core.Selenium.Net4, Version=1.0.0.31, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MPSTI.PlenoSoft.Core.Selenium.Net4.1.0.0.31\lib\net48\MPSTI.PlenoSoft.Core.Selenium.Net4.dll</HintPath>
+    <Reference Include="MPSTI.PlenoSoft.Core.Selenium.Net4, Version=1.0.0.33, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MPSTI.PlenoSoft.Core.Selenium.Net4.1.0.0.33\lib\net48\MPSTI.PlenoSoft.Core.Selenium.Net4.dll</HintPath>
     </Reference>
     <Reference Include="Polly, Version=7.0.0.0, Culture=neutral, PublicKeyToken=c8a3ffc3f8f825cc, processorArchitecture=MSIL">
       <HintPath>..\packages\Polly.7.2.3\lib\net472\Polly.dll</HintPath>
