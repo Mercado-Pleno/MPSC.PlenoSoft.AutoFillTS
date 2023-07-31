@@ -1,5 +1,5 @@
 ﻿using MPSC.PlenoSoft.AutoFillTS.Model;
-using MPSTI.PlenoSoft.Core.Selenium;
+using MPSTI.PlenoSoft.Core.Selenium.Drivers;
 using MPSTI.PlenoSoft.Core.Selenium.Factories;
 using System;
 using System.Collections.Generic;
@@ -59,7 +59,7 @@ deleteAllCookies();";
 		private Boolean OrquestrarPreenchimento(TimeSheet timeSheet)
 		{
 			var ok = true;
-			using (var webDriver = SeleniumFactory.BrowserWebDriver())
+			using (var webDriver = SeleniumFactory.GetDriver())
 			{
 				var seleniumDriver = new SeleniumDriver(webDriver);
 				seleniumDriver.GoTo(UrlLogin);

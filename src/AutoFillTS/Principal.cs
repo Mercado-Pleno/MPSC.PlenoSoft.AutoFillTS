@@ -1,8 +1,15 @@
 ﻿using MPSC.PlenoSoft.AutoFillTS.View;
 using MPSTI.PlenoSoft.Core.Selenium.Updates;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using Polly;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace MPSC.PlenoSoft.AutoFillTS
@@ -14,9 +21,10 @@ namespace MPSC.PlenoSoft.AutoFillTS
 		[STAThread]
 		public static void Main(String[] args)
 		{
-			var updateInfo1 = EdgeUpdateDriverVersion.Update(browserFileLocations);
-			var updateInfo2 = ChromeUpdateDriverVersion.Update(browserFileLocations);
+			var updateInfo1 = EdgeDriverUpdateVersion.Update(browserFileLocations);
+			var updateInfo2 = ChromeDriverUpdateVersion.Update(browserFileLocations);
 			MessageBox.Show($"{updateInfo1?.Message}\r\n\r\n{updateInfo2?.Message}");
+
 			Application.Run(new TSForm());
 		}
 	}
