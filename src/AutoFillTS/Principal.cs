@@ -1,15 +1,8 @@
 ﻿using MPSC.PlenoSoft.AutoFillTS.View;
 using MPSTI.PlenoSoft.Core.Selenium.Updates;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using Polly;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
 using System.Reflection;
-using System.Threading;
 using System.Windows.Forms;
 
 namespace MPSC.PlenoSoft.AutoFillTS
