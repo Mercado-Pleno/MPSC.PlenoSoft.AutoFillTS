@@ -7,16 +7,15 @@ using System.Windows.Forms;
 
 namespace MPSC.PlenoSoft.AutoFillTS
 {
-	public static class Principal
+    public static class Principal
 	{
-		private static readonly string[] browserFileLocations = new[] { @"C:\Program Files\", @"C:\Program Files (x86)\" };
+		private static readonly string[] browserFileLocations = new string[] { @"C:\Program Files\", @"C:\Program Files (x86)\" };
 
-		[STAThread]
+        [STAThread]
 		public static void Main(String[] args)
 		{
-			var updateInfo1 = EdgeDriverUpdateVersion.Update(browserFileLocations);
-			var updateInfo2 = ChromeDriverUpdateVersion.Update(browserFileLocations);
-			MessageBox.Show($"{updateInfo1?.Message}\r\n\r\n{updateInfo2?.Message}");
+            var updateInfo = ChromeDriverUpdateVersion.Update(browserFileLocations);
+			MessageBox.Show($"{updateInfo?.Message}");
 
 			Application.Run(new TSForm());
 		}
